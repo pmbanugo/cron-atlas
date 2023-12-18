@@ -1,0 +1,12 @@
+{
+  "name": "cron-atlas",
+  "private": true,
+  "version": "1.0.0",
+  "description": "a reliable serverless job scheduler",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Peter Mbanugo",
+  "license": "AGPL-3.0"
+}
