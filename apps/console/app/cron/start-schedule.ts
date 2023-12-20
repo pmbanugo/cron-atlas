@@ -32,7 +32,7 @@ export async function start({
       spec = {
         calendars: [
           {
-            //Might be better not to use UTC time and justspecify the IANA timezone used for the schedule
+            //Might be better not to use UTC time and just specify the IANA timezone used for the schedule
             comment: `once at ${scheduleValue}`,
             year: date.getUTCFullYear(),
             month: MONTHS[date.getUTCMonth()],
@@ -48,7 +48,6 @@ export async function start({
       throw new Error("Invalid schedule type");
   }
 
-  // https://typescript.temporal.io/api/classes/client.ScheduleClient#create
   const schedule = await client.schedule.create({
     action: {
       type: "startWorkflow",
