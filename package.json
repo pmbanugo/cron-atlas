@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "description": "a reliable serverless job scheduler",
   "scripts": {
+    "start:temporal-server": "temporal server start-dev --db-filename temporal.db",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
