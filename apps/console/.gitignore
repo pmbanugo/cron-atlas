@@ -1,0 +1,10 @@
+node_modules
+turso-db
+
+/.cache
+/build
+/public/build
+.env
+.env.copy
+.DS_Store
+
