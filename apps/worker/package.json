@@ -1,0 +1,30 @@
+{
+  "name": "worker",
+  "private": true,
+  "version": "1.0.0",
+  "description": "",
+  "main": "build/index.js",
+  "scripts": {
+    "typecheck": "tsc",
+    "build": "rm -rf dist && tsc --build",
+    "start": "tsx ./src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@cront-atlas/workflow": "workspace:*",
+    "@temporalio/activity": "^1.8.6",
+    "@temporalio/worker": "^1.8.6",
+    "@temporalio/workflow": "^1.8.6"
+  },
+  "devDependencies": {
+    "@remix-run/eslint-config": "^2.3.1",
+    "eslint": "^8.56.0",
+    "typescript": "^5.3.3",
+    "@types/node": "^20.10.5",
+    "tsx": "^4.6.2"
+  },
+  "engines": {
+    "node": ">=20.6.0"
+  },
+  "keywords": []
+}
