@@ -1,9 +1,15 @@
 node_modules
 turso-db
+temporal.db
 
-/.cache
-/build
-/public/build
+.cache
+build
+dist
+public/build
 .env
 .DS_Store
+tsconfig.tsbuildinfo
 
+Dockerfile
+.dockerignore
+fly.toml
