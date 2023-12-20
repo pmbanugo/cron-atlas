@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json.schemastore.org/tsconfig",
+  "include": ["**/*.ts"],
+  "exclude": ["node_modules", "**/*.test.ts", "dist"],
+  "compilerOptions": {
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "moduleResolution": "NodeNext",
+    "module": "NodeNext",
+    "resolveJsonModule": true,
+    "target": "ES2022",
+    "strict": true,
+    "allowJs": true,
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["./src/*"]
+    },
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "declaration": true,
+    "composite": true
+  }
+}
