@@ -1,12 +1,6 @@
 import { json, redirect } from "@remix-run/node";
 import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
-import {
-  CardTitle,
-  CardHeader,
-  CardContent,
-  CardFooter,
-  Card,
-} from "~/components/ui/card";
+import { CardTitle, CardHeader, CardContent, Card } from "~/components/ui/card";
 import { Badge } from "~/components/ui/badge";
 import { buildDbClient } from "~/data/db";
 import { jobs } from "~/data/schema";
@@ -14,7 +8,7 @@ import { and, eq } from "drizzle-orm";
 import { getRecent } from "~/cron/schedule-history";
 import { getSessionManager } from "~/lib/session.server";
 import { Gauge } from "lucide-react";
-import { Link, useLoaderData } from "@remix-run/react";
+import { useLoaderData } from "@remix-run/react";
 
 export const meta: MetaFunction = () => {
   return [
@@ -49,7 +43,7 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
 };
 
 export default function Detail() {
-  const { url, name, runInfo } = useLoaderData<typeof loader>();
+  const { name, runInfo } = useLoaderData<typeof loader>();
 
   return (
     <main className="flex flex-col items-center justify-center p-4">
@@ -96,16 +90,6 @@ export default function Detail() {
             <p className="text-gray-500 mb-4">No runs yet.</p>
           )}
         </CardContent>
-        <CardFooter className="flex justify-end">
-          <Link
-            className="text-blue-500 hover:underline"
-            to={url}
-            target="_blank"
-            rel="noreferrer noopener"
-          >
-            Go to Cron Job API
-          </Link>
-        </CardFooter>
       </Card>
     </main>
   );
