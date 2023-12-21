@@ -10,8 +10,8 @@ import { getSessionManager } from "~/lib/session.server";
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "New Remix App" },
-    { name: "description", content: "Welcome to Remix!" },
+    { title: "A modern cron job scheduler for the serverless era" },
+    { name: "description", content: "Welcome to Cron Atlas!" },
   ];
 };
 
