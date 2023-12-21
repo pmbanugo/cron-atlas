@@ -1,21 +1,20 @@
-import { defer, redirect } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
-import { Await, useLoaderData } from "@remix-run/react";
+import {
+  CardTitle,
+  CardHeader,
+  CardContent,
+  CardFooter,
+  Card,
+} from "~/components/ui/card";
+import { Badge } from "~/components/ui/badge";
 import { buildDbClient } from "~/data/db";
 import { jobs } from "~/data/schema";
 import { and, eq } from "drizzle-orm";
 import { getRecent } from "~/cron/schedule-history";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "~/components/ui/table";
-import { BadgeCheck } from "lucide-react";
-import { Suspense } from "react";
 import { getSessionManager } from "~/lib/session.server";
+import { Gauge } from "lucide-react";
+import { Link, useLoaderData } from "@remix-run/react";
 
 export const meta: MetaFunction = () => {
   return [
@@ -34,7 +33,7 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
 
   const db = buildDbClient();
   const job = await db.query.jobs.findFirst({
-    columns: { endpoint: true, id: true },
+    columns: { endpoint: true, id: true, name: true },
     where: and(eq(jobs.id, params.id), eq(jobs.userId, userId)),
   });
 
@@ -42,92 +41,72 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
     return redirect("/404");
   }
 
-  return defer({
+  return json({
+    name: job.name,
     url: job.endpoint.url,
-    recentRuns: getRecent({ jobId: job.id }),
+    runInfo: await getRecent({ jobId: job.id }),
   });
 };
 
-export default function RecentJobRuns() {
-  const { recentRuns, url } = useLoaderData<typeof loader>();
+export default function Detail() {
+  const { url, name, runInfo } = useLoaderData<typeof loader>();
+
   return (
-    <div>
-      <div className="text-xl">
-        Recent Job Runs for <span className="text-base italic">{url}</span>
-      </div>
-      <Suspense
-        fallback={
-          <div>
-            <div className="rounded-md border mt-3">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Date</TableHead>
-                    <TableHead>Timeout</TableHead>
-                    <TableHead>Status</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  <TableRow>
-                    <TableCell colSpan={4} className="h-24 text-center">
-                      Loading data .....
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </div>
+    <main className="flex flex-col items-center justify-center p-4">
+      <Card className="w-full max-w-2xl">
+        <CardHeader className="flex items-center justify-between">
+          <CardTitle className="text-xl font-bold">Job Monitor</CardTitle>
+          <div className="flex items-center gap-2">
+            <Gauge className="w-6 h-6" />
+            <span className="text-sm text-gray-600">{name}</span>
           </div>
-        }
-      >
-        <Await resolve={recentRuns}>
-          {(job) => (
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center justify-between mb-4">
+            <p className="font-medium text-lg">Total Job Runs:</p>
+            <Badge className="py-1 px-2 text-lg font-semibold">
+              {runInfo?.totalActions ?? 0}
+            </Badge>
+          </div>
+          {runInfo?.recentActions.length && runInfo.recentActions.length > 0 ? (
             <>
-              <div className="my-4">Total Job Runs: {job?.totalActions}</div>
-              <div className="rounded-md border mt-3">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Date</TableHead>
-                      <TableHead>Timeout</TableHead>
-                      <TableHead>Status</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {job !== null && job.recentActions.length > 0 ? (
-                      job.recentActions.map(
-                        ({
-                          takenAt,
-                          result: { timeout, success, status },
-                          workflowId,
-                        }) => (
-                          <TableRow
-                            key={workflowId}
-                            className={success ? "bg-lime-400" : "bg-rose-500"}
-                          >
-                            <TableCell>{takenAt}</TableCell>
-                            <TableCell>
-                              {timeout ? (
-                                <BadgeCheck className=" fill-slate-200" />
-                              ) : null}
-                            </TableCell>
-                            <TableCell>{status}</TableCell>
-                          </TableRow>
-                        )
-                      )
-                    ) : (
-                      <TableRow>
-                        <TableCell colSpan={4} className="h-24 text-center">
-                          No result.
-                        </TableCell>
-                      </TableRow>
-                    )}
-                  </TableBody>
-                </Table>
+              <p className="text-gray-500 mb-4">Recent Summaries:</p>
+              <div className="divide-y divide-gray-200">
+                {runInfo.recentActions.map((action, index) => (
+                  <div key={action.workflowId} className="py-2">
+                    <p className="font-medium">
+                      Job #{runInfo.totalActions - index}
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      Status:{" "}
+                      {action.result.timeout
+                        ? "Timeout"
+                        : action.result.success
+                        ? `Successful HTTP (${action.result.status})`
+                        : `Failed HTTP (${action.result.status})`}
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      Time: {action.takenAt}
+                    </p>
+                  </div>
+                ))}
               </div>
             </>
+          ) : (
+            <p className="text-gray-500 mb-4">No runs yet.</p>
           )}
-        </Await>
-      </Suspense>
-    </div>
+        </CardContent>
+        <CardFooter className="flex justify-end">
+          <Link
+            className="text-blue-500 hover:underline"
+            to={url}
+            target="_blank"
+            rel="noreferrer noopener"
+          >
+            Go to Cron Job API
+          </Link>
+        </CardFooter>
+      </Card>
+    </main>
   );
 }

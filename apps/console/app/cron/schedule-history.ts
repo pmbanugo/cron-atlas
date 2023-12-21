@@ -18,12 +18,14 @@ export async function getRecent({ jobId }: { jobId: string }) {
       }));
 
     const workflowResults = await Promise.all(
-      recentActionsWorkflowId.map(
-        ({ workflowId }) =>
-          client.workflow
-            .getHandle(workflowId)
-            .result() as Promise<CronCallResult>
-      )
+      recentActionsWorkflowId
+        .map(
+          ({ workflowId }) =>
+            client.workflow
+              .getHandle(workflowId)
+              .result() as Promise<CronCallResult>
+        )
+        .filter(Boolean)
     );
 
     return {
@@ -31,7 +33,7 @@ export async function getRecent({ jobId }: { jobId: string }) {
       totalActions: scheduledescription.info.numActionsTaken,
       recentActions: recentActionsWorkflowId.map((recentAction, index) => ({
         ...recentAction,
-        takenAt: recentAction.takenAt.toISOString(),
+        takenAt: recentAction.takenAt.toLocaleString("en-US"),
         result: workflowResults[index],
       })),
     };
