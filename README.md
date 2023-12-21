@@ -27,7 +27,7 @@ While it's still early to have this list, here's a list of people and products t
 1. [FxRate Today](https://fxrate.today/): Used to schedule task that updates the exchange rates.
 2. [FlyCD](https://flycd.dev): Internally used for some data clean up and migration tasks.
 
-You should give it a try today. It's currently in [public beta](https://cronatlas.dev/) while I work on adding more capabilites and a fancy UI. Feel free to open an issue or start a discussion if you have a feature request.
+You should give it a try today by signing up for the cloud version at [cronatlas.dev](https://cronatlas.dev/).
 
 > Feel free to open a PR if you're already using Cron Atlas.
 
