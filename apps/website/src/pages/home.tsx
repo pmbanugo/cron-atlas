@@ -7,6 +7,8 @@ import {
   Card,
   CardFooter,
 } from "@/components/ui/card";
+import createScheduleImage from "@/assets/create-schedule.avif";
+import jobMonitorImage from "@/assets/job-monitor.avif";
 
 export default function Home() {
   return (
@@ -133,6 +135,43 @@ export default function Home() {
                 to have, or fork and self-host internally.
               </CardContent>
             </Card>
+          </div>
+        </div>
+      </section>
+      <section className="bg-white py-16">
+        <div className="max-w-4xl mx-auto px-8">
+          <h3 className="text-3xl font-bold text-center">
+            A sneak peek into the console
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="text-center">
+              <img
+                alt="Job schedule view"
+                className="rounded mx-auto"
+                height="500"
+                width="500"
+                src={createScheduleImage}
+                style={{
+                  aspectRatio: "500/500",
+                  objectFit: "contain",
+                }}
+              />
+              <p className="mt-2">Job Schedule View</p>
+            </div>
+            <div className="text-center">
+              <img
+                alt="Job Detail View"
+                className="rounded mx-auto"
+                height="500"
+                width="500"
+                src={jobMonitorImage}
+                style={{
+                  aspectRatio: "500/500",
+                  objectFit: "contain",
+                }}
+              />
+              <p className="mt-2">Job Detail View</p>
+            </div>
           </div>
         </div>
       </section>
