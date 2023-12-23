@@ -17,7 +17,7 @@ export default function Home() {
           <h1 className="text-xl font-semibold">Cron Atlas</h1>
         </div>
         <Button asChild className="bg-blue-500 hover:bg-blue-700 text-white">
-          <a href="https://cronatlas.dev">Sign In</a>
+          <a href="https://cronatlas.dev">Dashboard</a>
         </Button>
       </nav>
       <header className="text-center py-16">
