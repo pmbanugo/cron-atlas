@@ -18,7 +18,7 @@ export default function Home() {
           <Clock className="w-5 h-5" />
           <h1 className="text-xl font-semibold">Cron Atlas</h1>
         </div>
-        <Button asChild className="bg-blue-500 hover:bg-blue-700 text-white">
+        <Button asChild>
           <a href="https://cronatlas.dev">Dashboard</a>
         </Button>
       </nav>
@@ -31,13 +31,10 @@ export default function Home() {
           using our cloud-based cron job scheduler.
         </p>
         <div className="flex justify-center gap-4">
-          <Button asChild className="bg-blue-500 hover:bg-blue-700 text-white">
+          <Button asChild>
             <a href="https://cronatlas.dev">Try for Free</a>
           </Button>
-          <Button
-            asChild
-            className="bg-transparent hover:bg-blue-500 text-blue-700 border border-blue-500 hover:text-white"
-          >
+          <Button asChild variant="link">
             <a href="#pricing">View Pricing</a>
           </Button>
         </div>
