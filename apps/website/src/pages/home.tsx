@@ -252,7 +252,7 @@ export default function Home() {
       <footer className="bg-white py-8">
         <div className="max-w-4xl mx-auto px-8 flex flex-col md:flex-row justify-between items-center">
           <div className="text-center mt-4 md:mt-0">
-            <span>© 2023 Cron Atlas. All rights reserved.</span>
+            <span>© 2024 Cron Atlas. All rights reserved.</span>
           </div>
         </div>
       </footer>
