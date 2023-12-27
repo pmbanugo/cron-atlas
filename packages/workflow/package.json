@@ -29,10 +29,10 @@
     "@temporalio/workflow": "^1.8.6"
   },
   "devDependencies": {
-    "@remix-run/eslint-config": "^2.3.1",
-    "eslint": "^8.56.0",
-    "typescript": "^5.3.3",
-    "@types/node": "^20.10.5"
+    "@remix-run/eslint-config": "2.4.1",
+    "eslint": "8.56.0",
+    "typescript": "5.3.3",
+    "@types/node": "20.10.5"
   },
   "engines": {
     "node": ">=20.6.0"
