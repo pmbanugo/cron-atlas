@@ -116,7 +116,6 @@ export function JobsTable({ jobs }: { jobs: Jobs }) {
 
 function DeleteDialog({ job, onClose }: { job: JobDTO; onClose: () => void }) {
   const submit = useSubmit();
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   return (
     <AlertDialog
@@ -139,14 +138,13 @@ function DeleteDialog({ job, onClose }: { job: JobDTO; onClose: () => void }) {
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
             onClick={() => {
-              setIsSubmitting(true);
               submit(null, {
                 method: "POST",
                 action: `/jobs/${job.id}/delete`,
               });
             }}
           >
-            {isSubmitting ? "Deleting..." : "Delete"}
+            Delete
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
