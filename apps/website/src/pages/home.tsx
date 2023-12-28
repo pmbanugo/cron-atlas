@@ -208,7 +208,9 @@ export default function Home() {
                 <CardTitle>Premium</CardTitle>
               </CardHeader>
               <CardContent>
-                <p>$20 / month</p>
+                <p>
+                  <span className="line-through">$40</span> $20 / month
+                </p>
                 <ul className="list-none space-y-2 pl-0">
                   <li className="flex items-center space-x-2">
                     <CheckCircle className="w-4 h-4" />
