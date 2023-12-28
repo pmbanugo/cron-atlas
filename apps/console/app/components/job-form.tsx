@@ -114,7 +114,18 @@ export function CronJobForm({
                 }
                 required
               />
-              <FormInfo>*Time is resolved in UTC</FormInfo>
+              <FormInfo>
+                Check the{" "}
+                <a
+                  href="https://github.com/pmbanugo/cron-atlas/blob/main/Documentation.md#schedule-specification"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline"
+                >
+                  documentation
+                </a>{" "}
+                for the schedule specification
+              </FormInfo>
             </div>
           </div>
         </div>
