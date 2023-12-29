@@ -14,7 +14,7 @@ export async function action({ request }: ActionFunctionArgs) {
     process.env.STRIPE_PREMIUM_BETA_PRICE_ID ??
     raiseError("Missing Stripe price ID");
 
-  const YOUR_DOMAIN =
+  const APP_DOMAIN =
     process.env.NODE_ENV === "production"
       ? "https://cronatlas.dev"
       : "http://localhost:3000";
@@ -28,8 +28,8 @@ export async function action({ request }: ActionFunctionArgs) {
       },
     ],
     mode: "subscription",
-    success_url: `${YOUR_DOMAIN}/subscription/success/checkout`,
-    cancel_url: `${YOUR_DOMAIN}`,
+    success_url: `${APP_DOMAIN}/subscription/success/checkout`,
+    cancel_url: `${APP_DOMAIN}`,
     automatic_tax: { enabled: true },
   });
   if (!session.url) throw json("Couldn't generate checkout session URL");
