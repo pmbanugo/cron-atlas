@@ -13,10 +13,12 @@ import {
 } from "~/components/ui/dropdown-menu";
 
 export function UserMenu({
+  hasSubscription,
   email,
   name,
   id,
 }: {
+  hasSubscription: boolean;
   email: string;
   name?: string;
   id: string;
@@ -46,17 +48,27 @@ export function UserMenu({
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem
-          className="cursor-pointer"
-          onClick={() =>
-            submit(null, {
-              method: "POST",
-              action: "/subscription/create/checkout",
-            })
-          }
-        >
-          Subscribe
-        </DropdownMenuItem>
+        {hasSubscription ? (
+          <DropdownMenuItem
+            disabled={true}
+            className="cursor-pointer line-through"
+          >
+            Manage Subscription
+          </DropdownMenuItem>
+        ) : (
+          <DropdownMenuItem
+            className="cursor-pointer"
+            onClick={() =>
+              submit(null, {
+                method: "POST",
+                action: "/subscription/create/checkout",
+              })
+            }
+          >
+            Subscribe
+          </DropdownMenuItem>
+        )}
+
         <DropdownMenuItem
           className="cursor-pointer"
           onClick={() => submit(null, { method: "POST", action: "/logout" })}
