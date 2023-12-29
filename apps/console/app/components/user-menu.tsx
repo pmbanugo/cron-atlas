@@ -31,7 +31,9 @@ export function UserMenu({
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
           <Avatar className="h-8 w-8">
             <AvatarImage
-              src={`https://avatar.vercel.sh/${id}.png`}
+              src={`https://avatar.vercel.sh/${id}.svg?size=35&text=${
+                name?.charAt(0) ?? email.charAt(0)
+              }`}
               alt="Avatar"
             />
             <AvatarFallback>N/A</AvatarFallback>
