@@ -1,5 +1,9 @@
 import { cssBundleHref } from "@remix-run/css-bundle";
-import type { LinksFunction } from "@remix-run/node";
+import {
+  json,
+  type LinksFunction,
+  type LoaderFunctionArgs,
+} from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -7,16 +11,26 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
 } from "@remix-run/react";
 import styles from "~/tailwind.css";
 import { MainNav } from "~/components/nav";
+import { getSessionManager } from "./lib/session.server";
+import { UserMenu } from "./components/user-menu";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: styles },
   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
 ];
 
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const user = await getSessionManager().requireUser(request);
+
+  return json({ user });
+};
+
 export default function App() {
+  const { user } = useLoaderData<typeof loader>();
   return (
     <html lang="en">
       <head>
@@ -40,11 +54,11 @@ export default function App() {
                 <MainNav className="mx-6" />
                 <div className="ml-auto flex items-center space-x-4">
                   {/* <Search /> */}
-                  {/* <UserMenu
-                email={user.email ?? ""}
-                username={user.username}
-                avatar={user.avatar}
-              /> */}
+                  <UserMenu
+                    email={user.email}
+                    name={user.firstName}
+                    id={user.userId}
+                  />
                 </div>
               </div>
             </div>

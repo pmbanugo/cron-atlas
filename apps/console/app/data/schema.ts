@@ -19,6 +19,23 @@ export const users = sqliteTable("users", {
 
 export type User = typeof users.$inferSelect;
 
+export const subscriptions = sqliteTable("subscriptions", {
+  id: text("id").primaryKey(),
+  customerId: text("customer_id"),
+  userId: text("user_id")
+    .references(() => users.id, { onDelete: "cascade", onUpdate: "no action" })
+    .notNull(),
+  active: integer("active", { mode: "boolean" }).notNull().default(false),
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .notNull()
+    .default(sql`(strftime('%s', 'now'))`),
+  updatedAt: integer("updated_at", { mode: "timestamp" })
+    .notNull()
+    .default(sql`(strftime('%s', 'now'))`),
+});
+
+export type Subscription = typeof subscriptions.$inferSelect;
+
 export const jobs = sqliteTable("jobs", {
   id: text("id")
     .primaryKey()

@@ -8,6 +8,13 @@
       "when": 1702908143693,
       "tag": "0000_parched_mad_thinker",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1703868815055,
+      "tag": "0001_kind_shaman",
+      "breakpoints": true
     }
   ]
 }
