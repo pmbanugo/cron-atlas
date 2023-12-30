@@ -2,6 +2,7 @@ import {
   redirect,
   type ActionFunctionArgs,
   type MetaFunction,
+  json,
 } from "@remix-run/node";
 import { buildDbClient } from "~/data/db";
 import { jobs } from "~/data/schema";
@@ -10,6 +11,7 @@ import type { ScheduleType } from "~/data/types";
 import type { CronJobFormData } from "~/components/job-form";
 import { CronJobForm } from "~/components/job-form";
 import { getSessionManager } from "~/lib/session.server";
+import { eq, sql } from "drizzle-orm";
 
 const scheduleTypes = {
   interval: "Interval",
@@ -47,6 +49,19 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 
   const db = buildDbClient();
+
+  const countResult = await db
+    .select({
+      count: sql<number>`COUNT(*)`.mapWith(Number),
+    })
+    .from(jobs)
+    .where(eq(jobs.userId, userId));
+
+  if (countResult[0].count >= 4) {
+    //TODO: handle this state in the UI/Form.
+    return json("You can't create more than 4 jobs", 400);
+  }
+
   const result = await db
     .insert(jobs)
     .values({
