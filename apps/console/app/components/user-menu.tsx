@@ -50,7 +50,7 @@ export function UserMenu({
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        {hasSubscription ? (
+        {/* {hasSubscription ? (
           <DropdownMenuItem
             disabled={true}
             className="cursor-pointer line-through"
@@ -69,7 +69,7 @@ export function UserMenu({
           >
             Subscribe
           </DropdownMenuItem>
-        )}
+        )} */}
 
         <DropdownMenuItem
           className="cursor-pointer"
