@@ -65,8 +65,8 @@ export default function Home() {
             <li className="flex items-start space-x-2">
               <CheckCircle className="w-4 h-4 mt-1" />
               <span>
-                No need to learn cron syntax. Use readable English & calendar to
-                schedule.
+                No need to learn cron syntax. Use human readable string &
+                calendar expression to describe the schedule.
               </span>
             </li>
           </ul>
