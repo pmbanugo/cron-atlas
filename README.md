@@ -42,6 +42,12 @@ While you can fork and run this on your computer, the fastest way to try it out 
 
 > TODO:
 
+## Resources
+
+Blog posts & examples:
+
+- [Top Hacker News Story Aggregator Using Next.js, Resend and Cron Atlas](https://dev.to/pmbanugo/top-hacker-news-story-aggregator-using-nextjs-resend-and-cron-atlas-18k2)
+
 ## Contributing
 
 Cron Atlas uses a permissive license and we welcome contributions from the community.
