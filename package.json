@@ -10,5 +10,8 @@
   },
   "keywords": [],
   "author": "Peter Mbanugo",
-  "license": "AGPL-3.0"
+  "license": "AGPL-3.0",
+  "devDependencies": {
+    "esbuild": "0.19.11"
+  }
 }

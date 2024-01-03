@@ -5,9 +5,11 @@
   "description": "",
   "main": "build/index.js",
   "scripts": {
-    "typecheck": "tsc",
-    "build": "rm -rf dist && tsc --build",
-    "start": "tsx ./src/index.ts",
+    "typecheck": "tsc --noEmit",
+    "build": "esbuild ./src/index.ts --outdir=build --bundle --platform=node --target=node20.6 --packages=external",
+    "build:watch": "esbuild ./src/index.ts --outdir=build --bundle --platform=node --target=node20.6 --packages=external --watch",
+    "start": "node ./build/index.js",
+    "start:dev": "node --env-file=.env --watch ./build/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
@@ -18,10 +20,9 @@
   },
   "devDependencies": {
     "@remix-run/eslint-config": "2.3.1",
-    "eslint": "8.56.0",
-    "typescript": "5.3.3",
     "@types/node": "20.10.5",
-    "tsx": "4.6.2"
+    "eslint": "8.56.0",
+    "typescript": "5.3.3"
   },
   "engines": {
     "node": ">=20.6.0"
