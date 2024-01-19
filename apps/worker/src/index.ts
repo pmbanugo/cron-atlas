@@ -6,8 +6,8 @@ import {
   makeTelemetryFilterString,
   DefaultLogger,
 } from "@temporalio/worker";
-import * as activities from "@cront-atlas/workflow/activities";
-import { constants } from "@cront-atlas/workflow";
+import * as activities from "@cron-atlas/workflow/activities";
+import { constants } from "@cron-atlas/workflow";
 import { createLogger } from "./logger";
 
 function ConfigureRuntime() {
@@ -87,7 +87,7 @@ async function run() {
   });
 
   const { code } = await bundleWorkflowCode({
-    workflowsPath: require.resolve("@cront-atlas/workflow/workflows"),
+    workflowsPath: require.resolve("@cron-atlas/workflow/workflows"),
   });
 
   const worker = await Worker.create({

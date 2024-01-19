@@ -1,4 +1,9 @@
-import { Form, useNavigate, useNavigation } from "@remix-run/react";
+import {
+  Form,
+  useActionData,
+  useNavigate,
+  useNavigation,
+} from "@remix-run/react";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
@@ -11,22 +16,37 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { useState } from "react";
-import type { ScheduleType } from "~/data/types";
-import { FormInfo } from "./form";
+import type { FunctionRuntime, JobType, ScheduleType } from "~/data/types";
+import { FormErrorMessage, FormInfo } from "./form";
 
-const scheduleTypes = {
+export const scheduleTypes = {
   interval: "Interval",
   cron: "Cron Expression",
   once: "Once",
 } as const satisfies Record<ScheduleType, string>;
 
+export const jobTypes = {
+  url: "URL",
+  function: "Scheduled Function",
+} as const satisfies Record<JobType, string>;
+
+export const runtimes = {
+  "nodejs-alpine": "Node.js Alpine",
+  "nodejs-debian": "Node.js Debian",
+  "bun-alpine": "Bun Alpine",
+  "bun-debian": "Bun Debian",
+} as const satisfies Record<FunctionRuntime, string>;
+
 const ONCE_PLACEHOLDER = "e.g. 2021-09-01T00:00:00Z";
 
 export type CronJobFormData = {
-  name: string | null;
-  url: string | null;
-  schedule: string | null;
-  scheduleType: string | null;
+  name?: string;
+  url?: string;
+  schedule?: string;
+  scheduleType?: string;
+  jobType?: JobType;
+  runtime?: FunctionRuntime;
+  file?: File;
 };
 
 export function CronJobForm({
@@ -41,12 +61,15 @@ export function CronJobForm({
       ? getSchedulePlaceholder(job.schedule.type)
       : "e.g. 2.5 hrs"
   );
+  const [jobType, setJobType] = useState<JobType>("function");
+
+  const actionData = useActionData<{ errors?: Record<string, string> }>();
 
   return (
-    <Form method="post" className="space-y-8">
+    <Form method="post" className="space-y-8" encType="multipart/form-data">
       <fieldset
         disabled={transition.state === "submitting"}
-        className="space-y-8"
+        className="space-y-6"
       >
         <div className="space-y-2">
           <div>
@@ -60,21 +83,16 @@ export function CronJobForm({
               required
             />
             <FormInfo>*maximum of hundred characters</FormInfo>
+            {actionData?.errors?.name ? (
+              <div className="space-y-2">
+                <FormErrorMessage>{actionData.errors.name}</FormErrorMessage>
+              </div>
+            ) : null}
           </div>
-          <div>
-            <Label>URL</Label>
-            <Input
-              placeholder="https://example.com"
-              name="url"
-              type="url"
-              defaultValue={job?.endpoint.url}
-              readOnly={!!job}
-              required
-            />
-          </div>
+
           <div className="flex gap-2">
             <div>
-              <Label>Type</Label>
+              <Label>Schedule</Label>
               <Select
                 name="scheduleType"
                 defaultValue={
@@ -102,7 +120,7 @@ export function CronJobForm({
               </Select>
             </div>
             <div className="flex-auto">
-              <Label>Schedule</Label>
+              <Label>&nbsp;</Label>
               <Input
                 defaultValue={job?.schedule.value}
                 placeholder={schedulePlaceholder}
@@ -128,13 +146,85 @@ export function CronJobForm({
               </FormInfo>
             </div>
           </div>
+
+          <div className="flex gap-2">
+            <div>
+              <Label>Job Type</Label>
+              <Select
+                name="jobType"
+                // TODO: render the default value of the select based on DB value
+                defaultValue={"function" satisfies JobType}
+                onValueChange={(value: JobType) => {
+                  setJobType(value);
+                }}
+                required
+              >
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {Object.entries(jobTypes).map(([value, label]) => (
+                    <SelectItem key={value} value={value}>
+                      {label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            {jobType === "function" ? (
+              <>
+                <div>
+                  <Label>Runtime</Label>
+                  <Select
+                    name="runtime"
+                    defaultValue={"nodejs-alpine" satisfies FunctionRuntime}
+                    required
+                  >
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Object.entries(runtimes).map(([value, label]) => (
+                        <SelectItem key={value} value={value}>
+                          {label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="flex-auto">
+                  <Label>Function File</Label>
+                  <Input
+                    name="file"
+                    id="file"
+                    type="file"
+                    multiple={false}
+                    accept="text/javascript,.js,.mjs,.cjs"
+                    required
+                  />
+                </div>
+              </>
+            ) : (
+              <div className="flex-auto">
+                <Label>URL</Label>
+                <Input
+                  placeholder="https://example.com/cron"
+                  name="url"
+                  type="url"
+                  defaultValue={job?.endpoint?.url}
+                  readOnly={!!job}
+                  required
+                />
+              </div>
+            )}
+          </div>
         </div>
 
-        {/* {actionData?.error ? (
-            <div className="space-y-2">
-              <FormErrorMessage>{actionData.error}</FormErrorMessage>
-            </div>
-          ) : null} */}
+        {actionData?.errors?.generic ? (
+          <div>
+            <FormErrorMessage>{actionData.errors.generic}</FormErrorMessage>
+          </div>
+        ) : null}
         <div className="space-x-2">
           <Button variant="outline" type="button" onClick={() => navigate(-1)}>
             Cancel

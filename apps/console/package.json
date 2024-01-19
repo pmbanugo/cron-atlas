@@ -12,11 +12,10 @@
     "db:generate": "drizzle-kit generate:sqlite",
     "db:migrate": "tsx --env-file=.env drizzle/migrate",
     "db:studio": "drizzle-kit studio --port 3333",
-    "worker:start:watch": "tsx --env-file=.env --watch ./app/cron-worker/worker.ts",
     "no-constant-binary-expression": "npx oxlint@latest -D no-constant-binary-expression"
   },
   "dependencies": {
-    "@cront-atlas/workflow": "workspace:*",
+    "@cron-atlas/workflow": "workspace:*",
     "@libsql/client": "0.4.0-pre.7",
     "@radix-ui/react-alert-dialog": "1.0.5",
     "@radix-ui/react-avatar": "^1.0.4",
@@ -33,6 +32,7 @@
     "class-variance-authority": "0.7.0",
     "clsx": "2.1.0",
     "drizzle-orm": "0.29.3",
+    "fly-admin": "1.4.0",
     "isbot": "3.6.8",
     "lucide-react": "0.309.0",
     "react": "18.2.0",

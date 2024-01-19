@@ -15,6 +15,13 @@
       "when": 1703868815055,
       "tag": "0001_kind_shaman",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1705516941531,
+      "tag": "0002_optimal_dormammu",
+      "breakpoints": true
     }
   ]
 }

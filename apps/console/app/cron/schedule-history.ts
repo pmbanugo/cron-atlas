@@ -1,13 +1,21 @@
 import { ScheduleNotFoundError } from "@temporalio/client";
 import { getClient } from "./client";
-import { getScheduleId } from "@cront-atlas/workflow";
-import type { CronCallResult } from "@cront-atlas/workflow";
+import { getScheduleId } from "@cron-atlas/workflow";
+import type { CronCallResult } from "@cron-atlas/workflow";
 
-export async function getRecent({ jobId }: { jobId: string }) {
+export async function getRecent({
+  jobId,
+  isScheduledFunction,
+}: {
+  jobId: string;
+  isScheduledFunction: boolean;
+}) {
   const client = await getClient();
 
   try {
-    const handle = client.schedule.getHandle(getScheduleId(jobId));
+    const handle = client.schedule.getHandle(
+      getScheduleId({ id: jobId, isScheduledFunction })
+    );
     const scheduledescription = await handle.describe();
     const recentActionsWorkflowId = scheduledescription.info.recentActions
       .reverse()

@@ -1,5 +1,5 @@
 import { text, sqliteTable, integer } from "drizzle-orm/sqlite-core";
-import type { ScheduleType } from "./types";
+import type { FunctionRuntime, JobType, ScheduleType } from "./types";
 import { ulid } from "ulidx";
 import { sql } from "drizzle-orm";
 
@@ -41,6 +41,10 @@ export const jobs = sqliteTable("jobs", {
     .primaryKey()
     .$defaultFn(() => ulid()),
   name: text("name", { length: 120 }).notNull(),
+  jobType: text("job_type").$type<JobType>().notNull().default("url"),
+  functionConfig: text("function_config", { mode: "json" }).$type<{
+    runtime: FunctionRuntime;
+  }>(),
   endpoint: text("endpoint", { mode: "json" })
     .$type<{
       url: string;

@@ -25,7 +25,10 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
     .returning({ id: users.id });
 
   if (deleted.length > 0) {
-    await deleteSchedule({ jobId: params.id }).catch((err) => {
+    await deleteSchedule({
+      jobId: params.id,
+      isScheduledFunction: false,
+    }).catch((err) => {
       //TODO: perhaps send email to admin/internal Slack so we can investigate and manually remove this schedule from Temporal. Or mark as deleted in Turso DB, then have a Temporal Workflow that takes care of deleting it from Turso & Temporal, thereby handling errors & retries.
 
       console.error(

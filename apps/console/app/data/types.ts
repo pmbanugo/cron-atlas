@@ -5,3 +5,11 @@ export const SCHEDULE_TYPES = {
 } as const;
 
 export type ScheduleType = keyof typeof SCHEDULE_TYPES;
+
+export type JobType = "url" | "function";
+
+export type FunctionRuntime =
+  | "nodejs-alpine"
+  | "nodejs-debian"
+  | "bun-alpine"
+  | "bun-debian";

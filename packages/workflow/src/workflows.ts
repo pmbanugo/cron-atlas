@@ -1,6 +1,13 @@
-import { proxyActivities } from "@temporalio/workflow";
+import {
+  condition,
+  proxyActivities,
+  setHandler,
+  workflowInfo,
+} from "@temporalio/workflow";
 import type * as activities from "./activities";
 import type { CronCallResult } from "./types";
+import type { JobFinishedInput } from "./signal";
+import { jobFinishedSignal } from "./signal";
 
 const { callJobApi } = proxyActivities<typeof activities>({
   startToCloseTimeout: "2 minutes",
@@ -9,10 +16,63 @@ const { callJobApi } = proxyActivities<typeof activities>({
   },
 });
 
+const { createMachine } = proxyActivities<typeof activities>({
+  startToCloseTimeout: "5 minutes",
+  retry: {
+    maximumAttempts: 10,
+    maximumInterval: "2 minutes",
+  },
+});
+
+const { deleteMachine } = proxyActivities<typeof activities>({
+  startToCloseTimeout: "2 minutes",
+});
+
 export async function triggerJob({
   url,
 }: {
   url: string;
 }): Promise<CronCallResult> {
   return await callJobApi(url);
+}
+
+export async function runScheduledFunction({
+  userId,
+  jobId,
+  flyAppName,
+  runtimeImage,
+}: {
+  userId: string;
+  jobId: string;
+  flyAppName: string;
+  runtimeImage: string;
+}) {
+  let jobFinishedSuccessfully = false;
+  const machine = await createMachine({
+    flyAppName,
+    runtimeImage,
+  });
+
+  setHandler(
+    jobFinishedSignal,
+    ({ workflowId, machineId, runId }: JobFinishedInput) => {
+      const currentWorkflowId = workflowInfo().workflowId;
+
+      if (
+        currentWorkflowId === workflowId &&
+        machine.id === machineId &&
+        workflowInfo().runId === runId
+      ) {
+        jobFinishedSuccessfully = true;
+      }
+    }
+  );
+
+  const jobTimedOut = !(await condition(
+    () => jobFinishedSuccessfully,
+    "3 minutes"
+  ));
+  await deleteMachine({ id: machine.id, flyAppName });
+
+  return { timeout: jobTimedOut };
 }

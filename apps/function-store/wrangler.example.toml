@@ -1,0 +1,15 @@
+name = "file-storage"
+compatibility_date = "2023-12-01"
+
+account_id = "YOUR_CLOUDFLARE_ACCOUNT_ID"
+
+# [vars]
+# MY_VARIABLE = "production_value"
+
+# [[kv_namespaces]]
+# binding = "MY_KV_NAMESPACE"
+# id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+
+[[r2_buckets]]
+binding = "FUNCTION_STORE"
+bucket_name = "demo"

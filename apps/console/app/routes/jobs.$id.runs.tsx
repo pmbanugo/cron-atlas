@@ -38,7 +38,7 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   return json({
     name: job.name,
     url: job.endpoint.url,
-    runInfo: await getRecent({ jobId: job.id }),
+    runInfo: await getRecent({ jobId: job.id, isScheduledFunction: false }),
   });
 };
 

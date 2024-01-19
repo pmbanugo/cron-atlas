@@ -1,10 +1,15 @@
 import type { ScheduleSpec } from "@temporalio/client";
 import { MONTHS, ScheduleOverlapPolicy } from "@temporalio/client";
-import { triggerJob, constants, getScheduleId } from "@cront-atlas/workflow";
+import {
+  triggerJob,
+  constants,
+  getScheduleId,
+  runScheduledFunction,
+} from "@cron-atlas/workflow";
 import { getClient } from "./client";
 import type { ScheduleType } from "~/data/types";
 
-export async function start({
+export async function startApiSchedule({
   jobId,
   url,
   schedule: { scheduleType, value: scheduleValue },
@@ -14,22 +19,81 @@ export async function start({
   schedule: { value: string; scheduleType: ScheduleType };
 }) {
   const client = await getClient();
+  const spec: ScheduleSpec = getScheduleSpecification(
+    scheduleType,
+    scheduleValue
+  );
 
-  let spec: ScheduleSpec;
+  const schedule = await client.schedule.create({
+    action: {
+      type: "startWorkflow",
+      workflowType: triggerJob,
+      args: [{ url }],
+      taskQueue: constants.QUEUE,
+    },
+    scheduleId: getScheduleId({ id: jobId, isScheduledFunction: false }),
+    policies: {
+      catchupWindow: "1 day",
+      overlap: ScheduleOverlapPolicy.SKIP,
+    },
+    spec: spec,
+  });
+
+  console.info(`Started schedule '${schedule.scheduleId}'.`);
+}
+
+export async function startScheduledFunction({
+  jobId,
+  userId,
+  flyAppName,
+  runtimeImage,
+  schedule: { scheduleType, value: scheduleValue },
+}: {
+  jobId: string;
+  userId: string;
+  flyAppName: string;
+  runtimeImage: string;
+  schedule: { value: string; scheduleType: ScheduleType };
+}) {
+  const client = await getClient();
+
+  const scheduleSpec: ScheduleSpec = getScheduleSpecification(
+    scheduleType,
+    scheduleValue
+  );
+
+  await client.schedule.create({
+    action: {
+      type: "startWorkflow",
+      workflowType: runScheduledFunction,
+      args: [{ userId, jobId, flyAppName, runtimeImage }],
+      taskQueue: constants.QUEUE,
+    },
+    scheduleId: getScheduleId({ id: jobId, isScheduledFunction: true }),
+    policies: {
+      catchupWindow: "1 day",
+      overlap: ScheduleOverlapPolicy.SKIP,
+    },
+    spec: scheduleSpec,
+  });
+}
+
+function getScheduleSpecification(
+  scheduleType: string,
+  scheduleValue: string
+): ScheduleSpec {
   switch (scheduleType) {
     case "interval":
-      spec = {
+      return {
         intervals: [{ every: scheduleValue }],
       };
-      break;
     case "cron":
-      spec = {
+      return {
         cronExpressions: [scheduleValue],
       };
-      break;
     case "once":
       const date = new Date(scheduleValue);
-      spec = {
+      return {
         calendars: [
           {
             //Might be better not to use UTC time and just specify the IANA timezone used for the schedule
@@ -43,25 +107,7 @@ export async function start({
           },
         ],
       };
-      break;
     default:
       throw new Error("Invalid schedule type");
   }
-
-  const schedule = await client.schedule.create({
-    action: {
-      type: "startWorkflow",
-      workflowType: triggerJob,
-      args: [{ url }],
-      taskQueue: constants.QUEUE,
-    },
-    scheduleId: getScheduleId(jobId),
-    policies: {
-      catchupWindow: "1 day",
-      overlap: ScheduleOverlapPolicy.CANCEL_OTHER,
-    },
-    spec: spec,
-  });
-
-  console.log(`Started schedule '${schedule.scheduleId}'.`);
 }

@@ -2,7 +2,7 @@ import type { ScheduleSpec, ScheduleUpdateOptions } from "@temporalio/client";
 import { MONTHS } from "@temporalio/client";
 import { getClient } from "./client";
 import type { ScheduleType } from "~/data/types";
-import { getScheduleId } from "@cront-atlas/workflow";
+import { getScheduleId } from "@cron-atlas/workflow";
 
 export async function update({
   jobId,
@@ -46,7 +46,9 @@ export async function update({
       throw new Error("Invalid schedule type");
   }
 
-  const handle = client.schedule.getHandle(getScheduleId(jobId));
+  const handle = client.schedule.getHandle(
+    getScheduleId({ id: jobId, isScheduledFunction: false })
+  );
   await handle.update((schedule: ScheduleUpdateOptions) => {
     schedule.spec = spec;
     return schedule;

@@ -1,5 +1,5 @@
 import { Connection, Client } from "@temporalio/client";
-import { constants } from "@cront-atlas/workflow";
+import { constants } from "@cron-atlas/workflow";
 
 let clientInstance: Client | null = null;
 

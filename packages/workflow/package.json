@@ -1,5 +1,5 @@
 {
-  "name": "@cront-atlas/workflow",
+  "name": "@cron-atlas/workflow",
   "private": true,
   "version": "1.0.0",
   "description": "",
@@ -27,13 +27,14 @@
   },
   "dependencies": {
     "@temporalio/activity": "^1.9.0",
-    "@temporalio/workflow": "^1.9.0"
+    "@temporalio/workflow": "^1.9.0",
+    "fly-admin": "1.4.0"
   },
   "devDependencies": {
     "@remix-run/eslint-config": "2.4.1",
+    "@types/node": "20.10.5",
     "eslint": "8.56.0",
-    "typescript": "5.3.3",
-    "@types/node": "20.10.5"
+    "typescript": "5.3.3"
   },
   "engines": {
     "node": ">=20.6.0"

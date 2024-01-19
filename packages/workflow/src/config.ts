@@ -3,6 +3,15 @@ export const constants = {
   NAMESPACE: process.env.TEMPORAL_NAMESPACE || "default",
 };
 
-export function getScheduleId(id: string) {
+export function getScheduleId({
+  isScheduledFunction,
+  id,
+}: {
+  id: string;
+  isScheduledFunction: boolean;
+}) {
+  if (isScheduledFunction) {
+    return `scheduled-function-${id}` as const;
+  }
   return `cronjob-${id}` as const;
 }

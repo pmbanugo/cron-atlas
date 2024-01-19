@@ -1,11 +1,18 @@
 import { getClient } from "./client";
-import { getScheduleId } from "@cront-atlas/workflow";
+import { getScheduleId } from "@cron-atlas/workflow";
 
-export async function deleteSchedule({ jobId }: { jobId: string }) {
+export async function deleteSchedule({
+  jobId,
+  isScheduledFunction,
+}: {
+  jobId: string;
+  isScheduledFunction: boolean;
+}) {
   const client = await getClient();
 
-  const handle = client.schedule.getHandle(getScheduleId(jobId));
+  const handle = client.schedule.getHandle(
+    getScheduleId({ id: jobId, isScheduledFunction })
+  );
   await handle.delete();
-
-  console.log(`Deleted schedule '${handle.scheduleId}'.`);
+  console.info(`Deleted schedule '${handle.scheduleId}'.`);
 }
