@@ -1,0 +1,11 @@
+node_modules
+
+/.cache
+/build
+/dist
+.tsimp
+.env
+.env.local
+.DS_Store
+
+main.js

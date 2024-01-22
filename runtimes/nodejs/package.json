@@ -1,0 +1,30 @@
+{
+  "name": "@cron-atlas/runtime-nodejs",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "",
+  "main": "build/runtime.js",
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc -w",
+    "build:alpine": "fly deploy --remote-only --build-only --dockerfile Dockerfile.alpine --app cronatlas-nodejs-alpine",
+    "build:slim": "fly deploy --remote-only --build-only --dockerfile Dockerfile.slim --app cronatlas-nodejs-slim",
+    "typecheck": "tsc --noEmit",
+    "start": "node build/runtime.js",
+    "start:dev": "tsimp src/runtime.ts"
+  },
+  "dependencies": {
+    "undici": "6.4.0"
+  },
+  "devDependencies": {
+    "@remix-run/eslint-config": "2.3.1",
+    "@tsconfig/node20": "20.1.2",
+    "@types/node": "20.11.5",
+    "eslint": "8.56.0",
+    "tsimp": "2.0.10",
+    "typescript": "5.3.3"
+  },
+  "keywords": [],
+  "author": "Peter Mbanugo"
+}

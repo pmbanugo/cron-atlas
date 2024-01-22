@@ -1,0 +1,16 @@
+{
+  "version": "5.3.3",
+  "extends": "@tsconfig/node20/tsconfig.json",
+  "include": ["**/*.ts"],
+  "exclude": ["node_modules", "**/*.test.ts", "build"],
+  "compilerOptions": {
+    "moduleResolution": "NodeNext",
+    "module": "NodeNext",
+    "forceConsistentCasingInFileNames": true,
+    "sourceMap": false,
+    "paths": {
+      "~/*": ["./src/*"]
+    },
+    "outDir": "./build"
+  }
+}
