@@ -70,7 +70,8 @@ export async function runScheduledFunction({
 
   const jobTimedOut = !(await condition(
     () => jobFinishedSuccessfully,
-    "3 minutes"
+    // TODO: adjust this timeout before going to production
+    "2 minutes"
   ));
   await deleteMachine({ id: machine.id, flyAppName });
 
