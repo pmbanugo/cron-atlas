@@ -41,7 +41,7 @@ FROM base
 COPY --chown=node:node --from=build /app /app
 
 # use non-root user
-# RUN chown -R node:node /app
+RUN chown -R node:node /app
 USER node
 
 CMD [ "npm", "run", "start" ]
