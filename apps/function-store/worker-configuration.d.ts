@@ -13,4 +13,6 @@ type WorkerEnv = {
 
   // Example binding to R2. Learn more at https://developers.cloudflare.com/workers/runtime-apis/r2/
   FUNCTION_STORE: R2Bucket;
+  // Example binding to a secret. Learn more at https://developers.cloudflare.com/workers/runtime-apis/secrets/
+  R2_SIGNING_SECRET: string;
 };

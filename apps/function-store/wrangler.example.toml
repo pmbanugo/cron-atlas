@@ -1,5 +1,6 @@
 name = "file-storage"
 compatibility_date = "2023-12-01"
+compatibility_flags = ["nodejs_compat"]
 
 account_id = "YOUR_CLOUDFLARE_ACCOUNT_ID"
 

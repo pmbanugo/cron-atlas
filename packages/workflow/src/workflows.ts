@@ -51,6 +51,8 @@ export async function runScheduledFunction({
   const machine = await createMachine({
     flyAppName,
     runtimeImage,
+    userId,
+    jobId,
   });
 
   setHandler(
