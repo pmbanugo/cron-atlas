@@ -10,7 +10,8 @@ export type ENV_KEYS =
   | "TEMPORAL_NAMESPACE"
   | "FLY_API_TOKEN"
   | "R2_SIGNING_SECRET"
-  | "FUNCTION_STORE_DOMAIN";
+  | "FUNCTION_STORE_DOMAIN"
+  | "WORKFLOW_SIGNAL_URL";
 
 export function getScheduleId({
   isScheduledFunction,

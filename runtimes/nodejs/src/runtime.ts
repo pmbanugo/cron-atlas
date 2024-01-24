@@ -6,25 +6,48 @@ const runId = process.env["CRONATLAS_FUNCTION_RUN_ID"];
 if (fileUrl && runId) {
   const url = new URL(fileUrl);
   url.searchParams.set("runId", runId);
-
-  const { statusCode, body } = await request(url);
-  if (statusCode !== 200) {
-    console.error("failed to fetch function file");
-    // TODO: Signal the workflow that to stop, with info that the function couldn't run
-    process.exit(1);
-  }
-
   try {
+    const { statusCode, body } = await request(url);
+    if (statusCode !== 200) {
+      console.error("failed to fetch function file");
+      await sendSignal({
+        error: { message: "internal error: failed to fetch function file" },
+      });
+      process.exit(1);
+    }
+
     const filename = "main.js";
     await writeFile(filename, body);
     const { handler } = await import(`../${filename}`);
-    handler();
+    await handler();
+    await sendSignal();
   } catch (error) {
     console.error(error);
 
-    // TODO: Signal the workflow that function run finished, with info that the function threw an error
+    await sendSignal({
+      error: {
+        message: error instanceof Error ? error.message : "Unknown error",
+      },
+    });
   }
 } else {
-  // TODO: Signal the workflow that function run finished, with info that the function couldn't run
   console.error("missing CRONATLAS env vars");
+  await sendSignal({ error: { message: "missing CRONATLAS env vars" } });
+}
+
+async function sendSignal(input?: { error?: { message: string } }) {
+  const signalUrl = process.env["CRONATLAS_WORKFLOW_SIGNAL_URL"];
+  if (signalUrl) {
+    await request(signalUrl, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        runId: process.env["CRONATLAS_FUNCTION_RUN_ID"],
+        workflowId: process.env["CRONATLAS_FUNCTION_WORKFLOW_ID"],
+        machineId: process.env["FLY_MACHINE_ID"],
+        error: input?.error,
+      }),
+    });
+    console.info("sent signal");
+  }
 }

@@ -84,7 +84,7 @@ export function createMachine({
   jobId: string;
 }) {
   const fly = getFlyClient();
-  const runId = activityInfo().workflowExecution.runId;
+  const { runId, workflowId } = activityInfo().workflowExecution;
   const functionFileUrl = createSignedUrl({ userId, jobId, runId });
   return fly.Machine.createMachine({
     app_name: flyAppName,
@@ -96,6 +96,8 @@ export function createMachine({
       env: {
         CRONATLAS_FUNCTION_FILE_URL: functionFileUrl,
         CRONATLAS_FUNCTION_RUN_ID: runId,
+        CRONATLAS_FUNCTION_WORKFLOW_ID: workflowId,
+        CRONATLAS_WORKFLOW_SIGNAL_URL: getEnv("WORKFLOW_SIGNAL_URL"),
       },
     },
   });

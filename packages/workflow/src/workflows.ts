@@ -3,6 +3,7 @@ import {
   proxyActivities,
   setHandler,
   workflowInfo,
+  log,
 } from "@temporalio/workflow";
 import type * as activities from "./activities";
 import type { CronCallResult } from "./types";
@@ -65,6 +66,7 @@ export async function runScheduledFunction({
         machine.id === machineId &&
         workflowInfo().runId === runId
       ) {
+        log.debug("Job finished successfully");
         jobFinishedSuccessfully = true;
       }
     }
