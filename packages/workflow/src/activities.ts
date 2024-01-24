@@ -85,11 +85,12 @@ export function createMachine({
 }) {
   const fly = getFlyClient();
   const { runId, workflowId } = activityInfo().workflowExecution;
-  const functionFileUrl = createSignedUrl({ userId, jobId, runId });
+  const functionFileUrl = createSignedR2Url({ userId, jobId, runId });
   return fly.Machine.createMachine({
     app_name: flyAppName,
     config: {
-      image: "pmbanugo/cronatlas-nodejs-alpine:amd64",
+      image:
+        "registry.fly.io/cronatlas-nodejs-alpine:deployment-01HMY71DG6ZDNHZ6J1BPSGHRH1",
       auto_destroy: true,
       restart: { policy: ApiMachineRestartPolicyEnum.No },
       guest: { cpu_kind: "shared", cpus: 1, memory_mb: 256 },
@@ -97,7 +98,10 @@ export function createMachine({
         CRONATLAS_FUNCTION_FILE_URL: functionFileUrl,
         CRONATLAS_FUNCTION_RUN_ID: runId,
         CRONATLAS_FUNCTION_WORKFLOW_ID: workflowId,
-        CRONATLAS_WORKFLOW_SIGNAL_URL: getEnv("WORKFLOW_SIGNAL_URL"),
+        CRONATLAS_WORKFLOW_SIGNAL_URL: createSignedSignalUrl({
+          runId,
+          workflowId,
+        }),
       },
     },
   });
@@ -131,7 +135,7 @@ export async function deleteMachine({
   }
 }
 
-function createSignedUrl({
+function createSignedR2Url({
   userId,
   jobId,
   runId,
@@ -156,5 +160,24 @@ function createSignedUrl({
   url.searchParams.set("signature", signature);
   url.searchParams.delete(runIdKey);
 
+  return url.toString();
+}
+
+function createSignedSignalUrl({
+  workflowId,
+  runId,
+}: {
+  workflowId: string;
+  runId: string;
+}) {
+  const expiryTimestamp = Math.floor(Date.now() / 1000) + 3600 * 24; // URL expires in 24 hours
+  const secret = getEnv("WORKFLOW_SIGNAL_SIGNING_SECRET");
+
+  const url = new URL(getEnv("WORKFLOW_SIGNAL_URL"));
+  const data = `${expiryTimestamp}${url.pathname}${runId}${workflowId}`;
+  const signature = createHmac("sha256", secret).update(data).digest("hex");
+
+  url.searchParams.set("expires", expiryTimestamp.toString());
+  url.searchParams.set("signature", signature);
   return url.toString();
 }

@@ -11,7 +11,8 @@ export type ENV_KEYS =
   | "FLY_API_TOKEN"
   | "R2_SIGNING_SECRET"
   | "FUNCTION_STORE_DOMAIN"
-  | "WORKFLOW_SIGNAL_URL";
+  | "WORKFLOW_SIGNAL_URL"
+  | "WORKFLOW_SIGNAL_SIGNING_SECRET";
 
 export function getScheduleId({
   isScheduledFunction,
