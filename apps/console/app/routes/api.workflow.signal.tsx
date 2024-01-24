@@ -16,7 +16,7 @@ export async function action({ request }: ActionFunctionArgs) {
   try {
     const signal = parse(SignalSchema, body);
     if (
-      !isUrlValid({
+      !isSignedUrlValid({
         urlString: request.url,
         secret:
           process.env.WORKFLOW_SIGNAL_SIGNING_SECRET ||
@@ -39,7 +39,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 }
 
-export function isUrlValid({
+export function isSignedUrlValid({
   urlString,
   secret,
   runId,
