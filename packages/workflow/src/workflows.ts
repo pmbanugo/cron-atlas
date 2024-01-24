@@ -75,7 +75,9 @@ export async function runScheduledFunction({
     // TODO: adjust this timeout before going to production
     "2 minutes"
   ));
-  await deleteMachine({ id: machine.id, flyAppName });
+  if (jobTimedOut) {
+    await deleteMachine({ id: machine.id, flyAppName });
+  }
 
   return { timeout: jobTimedOut };
 }
