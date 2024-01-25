@@ -36,6 +36,9 @@ export async function createScheduledFunction({
   const uploadRequestPromise = fetch(functionStoreUrl, {
     method: "POST",
     body: formData,
+    headers: {
+      Authorization: `ApiKey ${process.env.FUNCTION_STORE_API_KEY}`,
+    },
   });
 
   const flyAppName = getFlyAppName(jobId);

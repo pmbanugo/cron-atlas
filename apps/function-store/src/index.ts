@@ -8,6 +8,11 @@ app.get("/", (c) => {
 });
 
 app.post("/", async (c) => {
+  const auth = c.req.header("authorization");
+  if (auth !== `ApiKey ${c.env.FUNCTION_STORE_API_KEY}`) {
+    return c.text("Unauthorized", 401);
+  }
+
   const body = await c.req.parseBody<{
     file: File;
     jobId: string;
@@ -25,6 +30,11 @@ app.post("/", async (c) => {
 });
 
 app.delete("/", async (c) => {
+  const auth = c.req.header("authorization");
+  if (auth !== `ApiKey ${c.env.FUNCTION_STORE_API_KEY}`) {
+    return c.text("Unauthorized", 401);
+  }
+
   const body = await c.req.json<{
     jobId: string;
     userId: string;
