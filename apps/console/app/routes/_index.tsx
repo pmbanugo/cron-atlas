@@ -21,7 +21,13 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
   const db = buildDbClient();
   const data = await db.query.jobs.findMany({
-    columns: { id: true, name: true, schedule: true, endpoint: true },
+    columns: {
+      id: true,
+      name: true,
+      schedule: true,
+      endpoint: true,
+      jobType: true,
+    },
     where: eq(jobs.userId, user.userId),
   });
 

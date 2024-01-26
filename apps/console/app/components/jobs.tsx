@@ -27,7 +27,7 @@ import {
 } from "~/components/ui/dropdown-menu";
 import type { Job } from "~/data/schema";
 import { Link, useSubmit } from "@remix-run/react";
-import type { ScheduleType } from "~/data/types";
+import type { JobType, ScheduleType } from "~/data/types";
 import { useState } from "react";
 
 const scheduleTypes = {
@@ -36,7 +36,12 @@ const scheduleTypes = {
   once: "Once",
 } as const satisfies Record<ScheduleType, string>;
 
-type JobDTO = Pick<Job, "id" | "name" | "schedule" | "endpoint">;
+const jobTypes = {
+  function: "Scheduled Function",
+  url: "Remote Job (URL)",
+} as const satisfies Record<JobType, string>;
+
+type JobDTO = Pick<Job, "id" | "name" | "schedule" | "endpoint" | "jobType">;
 type Jobs = JobDTO[];
 
 export function JobsTable({ jobs }: { jobs: Jobs }) {
@@ -49,6 +54,7 @@ export function JobsTable({ jobs }: { jobs: Jobs }) {
           <TableHeader>
             <TableRow>
               <TableHead>Name</TableHead>
+              <TableHead>Type</TableHead>
               <TableHead>Schedule Type</TableHead>
               <TableHead>Schedule</TableHead>
               <TableHead></TableHead>
@@ -59,6 +65,7 @@ export function JobsTable({ jobs }: { jobs: Jobs }) {
               jobs.map((job) => (
                 <TableRow key={job.id}>
                   <TableCell>{job.name}</TableCell>
+                  <TableCell>{jobTypes[job.jobType]}</TableCell>
                   <TableCell>{scheduleTypes[job.schedule.type]}</TableCell>
                   <TableCell>
                     {job.schedule.type === "once"
