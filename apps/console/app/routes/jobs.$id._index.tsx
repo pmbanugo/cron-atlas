@@ -53,6 +53,17 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       return { errors: { file: "File must be a JS file." } };
     }
 
+    const db = buildDbClient();
+    const existingJob = await db.query.jobs.findFirst({
+      where: and(eq(jobs.id, jobId), eq(jobs.userId, userId)),
+      columns: {
+        id: true,
+      },
+    });
+    if (!existingJob) {
+      return new Response("Unauthorized", { status: 401 });
+    }
+
     const functionStoreUrl = getEnv("FUNCTION_STORE_DOMAIN");
 
     const funcStoreFormData = new FormData();
@@ -102,6 +113,16 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
     }
 
     const db = buildDbClient();
+    const existingJob = await db.query.jobs.findFirst({
+      where: and(eq(jobs.id, jobId), eq(jobs.userId, userId)),
+      columns: {
+        id: true,
+      },
+    });
+    if (!existingJob) {
+      return new Response("Unauthorized", { status: 401 });
+    }
+
     await db
       .update(jobs)
       .set({
