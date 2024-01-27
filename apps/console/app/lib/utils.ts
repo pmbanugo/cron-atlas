@@ -9,6 +9,12 @@ export function raiseError(message: string): never {
   throw new Error(message);
 }
 
+export function getEnv(name: string) {
+  return (
+    process.env[name] ?? raiseError(`Missing environment variable: ${name}`)
+  );
+}
+
 export function getFlyAppName(jobId: string) {
   // use lowercase because fly apps can't have uppercase letters
   return `function-${jobId.toLowerCase()}`;

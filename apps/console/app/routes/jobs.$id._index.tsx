@@ -10,65 +10,135 @@ import { jobs } from "~/data/schema";
 import type { ScheduleType } from "~/data/types";
 import { and, eq, sql } from "drizzle-orm";
 import type { CronJobFormData } from "~/components/job-form";
-import { CronJobForm } from "~/components/job-form";
-import { update } from "~/cron/update-schedule";
+import {
+  CronJobForm,
+  formTypes,
+  jobTypes,
+  runtimes,
+  scheduleTypes,
+} from "~/components/job-form";
+import {
+  updateApiSchedule,
+  updateFunctionSchedule,
+  updateScheduledFunctionArgs,
+} from "~/cron/update-schedule";
 import { getSessionManager } from "~/lib/session.server";
-
-const scheduleTypes = {
-  interval: "Interval",
-  cron: "Cron Expression",
-  once: "Once",
-} as const satisfies Record<ScheduleType, string>;
+import { getEnv, getFlyAppName } from "~/lib/utils";
 
 export const meta: MetaFunction = () => {
   return [
     { title: "Update Job Schedule" },
-    { name: "description", content: "Create Job Schedule" },
+    { name: "description", content: "Update Job Schedule" },
   ];
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
-  if (!params.id) {
+  const jobId = params.id;
+  const userId = await getSessionManager().requireUserId(request);
+  if (!jobId) {
     return redirect("/404");
   }
 
   const formData = await request.formData();
-  const { name, schedule, scheduleType } = Object.fromEntries(
-    formData
-  ) as CronJobFormData;
-  if (
-    name === null ||
-    schedule === null ||
-    scheduleType === null ||
-    !Object.keys(scheduleTypes).includes(scheduleType)
-  ) {
-    throw new Error("Invalid form data");
-  }
-  if (name.length > 100) {
-    throw new Error("Name can't be more than 100 characters");
-  }
+  const formType = formData.get("formType");
+  const { name, schedule, scheduleType, jobType, runtime, file } =
+    Object.fromEntries(formData) as CronJobFormData;
 
-  const db = buildDbClient();
+  if (formType && formType === formTypes.functionUpload) {
+    if (!runtime || !Object.keys(runtimes).includes(runtime)) {
+      throw new Error("Invalid runtime value");
+    }
 
-  await db
-    .update(jobs)
-    .set({
-      name,
-      schedule: {
-        type: scheduleType as ScheduleType,
-        value: schedule,
+    if (!file || file.type !== "text/javascript" || file.size === 0) {
+      return { errors: { file: "File must be a JS file." } };
+    }
+
+    const functionStoreUrl = getEnv("FUNCTION_STORE_DOMAIN");
+
+    const funcStoreFormData = new FormData();
+    funcStoreFormData.append("userId", userId);
+    funcStoreFormData.append("jobId", jobId);
+    funcStoreFormData.append("file", file);
+    const uploadResponse = await fetch(functionStoreUrl, {
+      method: "POST",
+      body: funcStoreFormData,
+      headers: {
+        Authorization: `ApiKey ${process.env.FUNCTION_STORE_API_KEY}`,
       },
-      updatedAt: sql`(strftime('%s', 'now'))`,
-    })
-    .where(eq(jobs.id, params.id));
+    });
 
-  await update({
-    jobId: params.id,
-    schedule: {
-      scheduleType: scheduleType as ScheduleType,
-      value: schedule,
-    },
-  });
+    if (!uploadResponse.ok) {
+      return {
+        errors: {
+          generic: "Error uploading function file",
+        },
+      };
+    }
+
+    await updateScheduledFunctionArgs({
+      jobId,
+      runtimeImage: runtime,
+      userId,
+      flyAppName: getFlyAppName(jobId),
+    });
+  } else {
+    if (
+      !name ||
+      !schedule ||
+      !scheduleType ||
+      !Object.keys(scheduleTypes).includes(scheduleType) ||
+      !jobType ||
+      !Object.keys(jobTypes).includes(jobType)
+    ) {
+      return {
+        errors: {
+          generic: "Missing required fields",
+        },
+      };
+    }
+
+    if (name.length > 100) {
+      return { errors: { name: "Name must be less than 100 characters" } };
+    }
+
+    const db = buildDbClient();
+    await db
+      .update(jobs)
+      .set({
+        name,
+        schedule: {
+          type: scheduleType as ScheduleType,
+          value: schedule,
+        },
+        updatedAt: sql`(strftime('%s', 'now'))`,
+      })
+      .where(eq(jobs.id, jobId));
+
+    switch (jobType) {
+      case "url": {
+        await updateApiSchedule({
+          jobId: jobId,
+          schedule: {
+            scheduleType: scheduleType as ScheduleType,
+            value: schedule,
+          },
+        });
+        break;
+      }
+      case "function": {
+        await updateFunctionSchedule({
+          jobId,
+          schedule: {
+            scheduleType: scheduleType as ScheduleType,
+            value: schedule,
+          },
+        });
+        break;
+      }
+      default:
+        throw new Error(`Invalid job type: ${jobType}`);
+    }
+  }
 
   return redirect("/");
 };
@@ -84,6 +154,11 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   const db = buildDbClient();
   const job = await db.query.jobs.findFirst({
     where: and(eq(jobs.id, params.id), eq(jobs.userId, userId)),
+    columns: {
+      createdAt: false,
+      updatedAt: false,
+      userId: false,
+    },
   });
 
   if (!job) {
@@ -97,7 +172,9 @@ export default function UpdateJob() {
   const { job } = useLoaderData<typeof loader>();
   return (
     <div>
-      <h1 className="text-xl">Update Job Schedule</h1>
+      <h1 className="text-2xl font-semibold leading-none tracking-tight mb-2">
+        Update Job Schedule
+      </h1>
       <CronJobForm job={job} />
     </div>
   );

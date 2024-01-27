@@ -1,5 +1,5 @@
 import type { ScheduleSpec } from "@temporalio/client";
-import { MONTHS, ScheduleOverlapPolicy } from "@temporalio/client";
+import { ScheduleOverlapPolicy } from "@temporalio/client";
 import {
   triggerJob,
   constants,
@@ -8,6 +8,8 @@ import {
 } from "@cron-atlas/workflow";
 import { getClient } from "./client";
 import type { ScheduleType } from "~/data/types";
+import type { ScheduledFunctionArgs } from "./common";
+import { getScheduleSpecification } from "./common";
 
 export async function startApiSchedule({
   jobId,
@@ -48,13 +50,7 @@ export async function startScheduledFunction({
   flyAppName,
   runtimeImage,
   schedule: { scheduleType, value: scheduleValue },
-}: {
-  jobId: string;
-  userId: string;
-  flyAppName: string;
-  runtimeImage: string;
-  schedule: { value: string; scheduleType: ScheduleType };
-}) {
+}: ScheduledFunctionArgs) {
   const client = await getClient();
 
   const scheduleSpec: ScheduleSpec = getScheduleSpecification(
@@ -76,38 +72,4 @@ export async function startScheduledFunction({
     },
     spec: scheduleSpec,
   });
-}
-
-function getScheduleSpecification(
-  scheduleType: string,
-  scheduleValue: string
-): ScheduleSpec {
-  switch (scheduleType) {
-    case "interval":
-      return {
-        intervals: [{ every: scheduleValue }],
-      };
-    case "cron":
-      return {
-        cronExpressions: [scheduleValue],
-      };
-    case "once":
-      const date = new Date(scheduleValue);
-      return {
-        calendars: [
-          {
-            //Might be better not to use UTC time and just specify the IANA timezone used for the schedule
-            comment: `once at ${scheduleValue}`,
-            year: date.getUTCFullYear(),
-            month: MONTHS[date.getUTCMonth()],
-            dayOfMonth: date.getUTCDate(),
-            hour: date.getUTCHours(),
-            minute: date.getUTCMinutes(),
-            second: date.getUTCSeconds(),
-          },
-        ],
-      };
-    default:
-      throw new Error("Invalid schedule type");
-  }
 }

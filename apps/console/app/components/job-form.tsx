@@ -18,6 +18,7 @@ import {
 import { useState } from "react";
 import type { FunctionRuntime, JobType, ScheduleType } from "~/data/types";
 import { FormErrorMessage, FormInfo } from "./form";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 
 export const scheduleTypes = {
   interval: "Interval",
@@ -29,6 +30,10 @@ export const jobTypes = {
   url: "URL",
   function: "Scheduled Function",
 } as const satisfies Record<JobType, string>;
+
+export const formTypes = {
+  functionUpload: "function-upload",
+} as const;
 
 export const runtimes = {
   "nodejs-alpine": "Node.js Alpine",
@@ -52,7 +57,10 @@ export type CronJobFormData = {
 export function CronJobForm({
   job,
 }: {
-  job?: Pick<Job, "name" | "schedule" | "endpoint">;
+  job?: Pick<
+    Job,
+    "name" | "schedule" | "endpoint" | "jobType" | "functionConfig"
+  >;
 }) {
   const transition = useNavigation();
   const navigate = useNavigate();
@@ -61,130 +69,65 @@ export function CronJobForm({
       ? getSchedulePlaceholder(job.schedule.type)
       : "e.g. 2.5 hrs"
   );
-  const [jobType, setJobType] = useState<JobType>("function");
+  const [jobType, setJobType] = useState<JobType>(
+    job?.jobType ? job.jobType : "function"
+  );
 
   const actionData = useActionData<{ errors?: Record<string, string> }>();
 
   return (
-    <Form method="post" className="space-y-8" encType="multipart/form-data">
-      <fieldset
-        disabled={transition.state === "submitting"}
-        className="space-y-6"
-      >
-        <div className="space-y-2">
-          <div>
-            <Label>Name</Label>
-            <Input
-              placeholder="e.g call lambda function"
-              name="name"
-              type="text"
-              defaultValue={job?.name}
-              maxLength={100}
-              required
-            />
-            <FormInfo>*maximum of hundred characters</FormInfo>
-            {actionData?.errors?.name ? (
-              <div className="space-y-2">
-                <FormErrorMessage>{actionData.errors.name}</FormErrorMessage>
+    <>
+      <Card className="p-6">
+        <Form method="post" className="space-y-8" encType="multipart/form-data">
+          <fieldset
+            disabled={transition.state === "submitting"}
+            className="space-y-6"
+          >
+            <div className="space-y-2">
+              <div>
+                <Label>Name</Label>
+                <Input
+                  placeholder="e.g call lambda function"
+                  name="name"
+                  type="text"
+                  defaultValue={job?.name}
+                  maxLength={100}
+                  required
+                />
+                <FormInfo>*maximum of hundred characters</FormInfo>
+                {actionData?.errors?.name ? (
+                  <div className="space-y-2">
+                    <FormErrorMessage>
+                      {actionData.errors.name}
+                    </FormErrorMessage>
+                  </div>
+                ) : null}
               </div>
-            ) : null}
-          </div>
 
-          <div className="flex gap-2">
-            <div>
-              <Label>Schedule</Label>
-              <Select
-                name="scheduleType"
-                defaultValue={
-                  job
-                    ? job.schedule.type
-                    : ("interval" satisfies keyof typeof scheduleTypes)
-                }
-                onValueChange={(value) => {
-                  setSchedulePlaceholder(
-                    getSchedulePlaceholder(value as keyof typeof scheduleTypes)
-                  );
-                }}
-                required
-              >
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Type" />
-                </SelectTrigger>
-                <SelectContent>
-                  {Object.entries(scheduleTypes).map(([value, label]) => (
-                    <SelectItem key={value} value={value}>
-                      {label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="flex-auto">
-              <Label>&nbsp;</Label>
-              <Input
-                defaultValue={job?.schedule.value}
-                placeholder={schedulePlaceholder}
-                name="schedule"
-                type={
-                  schedulePlaceholder === ONCE_PLACEHOLDER
-                    ? "datetime-local"
-                    : "text"
-                }
-                required
-              />
-              <FormInfo>
-                Check the{" "}
-                <a
-                  href="https://github.com/pmbanugo/cron-atlas/blob/main/Documentation.md#schedule-specification"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="underline"
-                >
-                  documentation
-                </a>{" "}
-                for the schedule specification
-              </FormInfo>
-            </div>
-          </div>
-
-          <div className="flex gap-2">
-            <div>
-              <Label>Job Type</Label>
-              <Select
-                name="jobType"
-                // TODO: render the default value of the select based on DB value
-                defaultValue={"function" satisfies JobType}
-                onValueChange={(value: JobType) => {
-                  setJobType(value);
-                }}
-                required
-              >
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {Object.entries(jobTypes).map(([value, label]) => (
-                    <SelectItem key={value} value={value}>
-                      {label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            {jobType === "function" ? (
-              <>
+              <div className="flex gap-2">
                 <div>
-                  <Label>Runtime</Label>
+                  <Label>Schedule</Label>
                   <Select
-                    name="runtime"
-                    defaultValue={"nodejs-alpine" satisfies FunctionRuntime}
+                    name="scheduleType"
+                    defaultValue={
+                      job
+                        ? job.schedule.type
+                        : ("interval" satisfies keyof typeof scheduleTypes)
+                    }
+                    onValueChange={(value) => {
+                      setSchedulePlaceholder(
+                        getSchedulePlaceholder(
+                          value as keyof typeof scheduleTypes
+                        )
+                      );
+                    }}
                     required
                   >
                     <SelectTrigger className="w-[180px]">
-                      <SelectValue />
+                      <SelectValue placeholder="Type" />
                     </SelectTrigger>
                     <SelectContent>
-                      {Object.entries(runtimes).map(([value, label]) => (
+                      {Object.entries(scheduleTypes).map(([value, label]) => (
                         <SelectItem key={value} value={value}>
                           {label}
                         </SelectItem>
@@ -193,48 +136,211 @@ export function CronJobForm({
                   </Select>
                 </div>
                 <div className="flex-auto">
-                  <Label>Function File</Label>
+                  <Label>&nbsp;</Label>
                   <Input
-                    name="file"
-                    id="file"
-                    type="file"
-                    multiple={false}
-                    accept="text/javascript,.js,.mjs,.cjs"
+                    defaultValue={job?.schedule.value}
+                    placeholder={schedulePlaceholder}
+                    name="schedule"
+                    type={
+                      schedulePlaceholder === ONCE_PLACEHOLDER
+                        ? "datetime-local"
+                        : "text"
+                    }
                     required
                   />
+                  <FormInfo>
+                    Check the{" "}
+                    <a
+                      href="https://github.com/pmbanugo/cron-atlas/blob/main/Documentation.md#schedule-specification"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="underline"
+                    >
+                      documentation
+                    </a>{" "}
+                    for the schedule specification
+                  </FormInfo>
                 </div>
-              </>
-            ) : (
-              <div className="flex-auto">
-                <Label>URL</Label>
-                <Input
-                  placeholder="https://example.com/cron"
-                  name="url"
-                  type="url"
-                  defaultValue={job?.endpoint?.url}
-                  readOnly={!!job}
-                  required
-                />
               </div>
-            )}
-          </div>
-        </div>
 
-        {actionData?.errors?.generic ? (
-          <div>
-            <FormErrorMessage>{actionData.errors.generic}</FormErrorMessage>
+              <div className="flex gap-2">
+                <div>
+                  <Label>Job Type</Label>
+                  <Select
+                    name="jobType"
+                    defaultValue={
+                      job?.jobType
+                        ? job.jobType
+                        : ("function" satisfies JobType)
+                    }
+                    disabled={!!job}
+                    onValueChange={(value: JobType) => {
+                      setJobType(value);
+                    }}
+                    required
+                  >
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Object.entries(jobTypes).map(([value, label]) => (
+                        <SelectItem key={value} value={value}>
+                          {label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  {!!job && (
+                    <input type="hidden" name="jobType" value={job.jobType} />
+                  )}
+                </div>
+                {jobType === "function" ? (
+                  <>
+                    <div>
+                      <Label>Runtime</Label>
+                      <Select
+                        name="runtime"
+                        defaultValue={
+                          job?.functionConfig?.runtime
+                            ? job.functionConfig.runtime
+                            : ("nodejs-alpine" satisfies FunctionRuntime)
+                        }
+                        required
+                        disabled={!!job}
+                      >
+                        <SelectTrigger className="w-[180px]">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {Object.entries(runtimes).map(([value, label]) => (
+                            <SelectItem key={value} value={value}>
+                              {label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    {!job && (
+                      <div className="flex-auto">
+                        <Label>Function File</Label>
+                        <Input
+                          name="file"
+                          id="file"
+                          type="file"
+                          multiple={false}
+                          accept="text/javascript,.js,.mjs,.cjs"
+                          required
+                        />
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <div className="flex-auto">
+                    <Label>URL</Label>
+                    <Input
+                      placeholder="https://example.com/cron"
+                      name="url"
+                      type="url"
+                      defaultValue={job?.endpoint?.url}
+                      disabled={!!job}
+                      required
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {actionData?.errors?.generic ? (
+              <div>
+                <FormErrorMessage>{actionData.errors.generic}</FormErrorMessage>
+              </div>
+            ) : null}
+            <div className="space-x-2">
+              <Button
+                variant="outline"
+                type="button"
+                onClick={() => navigate(-1)}
+              >
+                Cancel
+              </Button>
+              <Button type="submit">
+                {transition.state === "submitting" ? "Saving..." : "Save"}
+              </Button>
+            </div>
+          </fieldset>
+        </Form>
+      </Card>
+
+      {job && job.jobType === "function" ? (
+        <FunctionUpdateForm
+          runtime={job.functionConfig?.runtime ?? "nodejs-alpine"}
+        />
+      ) : null}
+    </>
+  );
+}
+
+function FunctionUpdateForm({ runtime }: { runtime: FunctionRuntime }) {
+  const actionData = useActionData<{ errors?: Record<string, string> }>();
+  return (
+    <Card className="w-full mt-4">
+      <CardHeader>
+        <CardTitle>Function File Upload</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Form method="post" encType="multipart/form-data" className="space-y-6">
+          <div className="grid grid-cols-6 gap-4">
+            <div className="space-y-2 col-span-1">
+              <Label htmlFor="runtime">Runtime</Label>
+              <Select
+                name="runtime"
+                defaultValue={runtime satisfies FunctionRuntime}
+                required
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {Object.entries(runtimes).map(([value, label]) => (
+                    <SelectItem key={value} value={value}>
+                      {label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2 col-span-5">
+              <Label htmlFor="file">Function File</Label>
+              <Input
+                name="file"
+                id="file"
+                type="file"
+                multiple={false}
+                accept="text/javascript,.js,.mjs,.cjs"
+                required
+              />
+            </div>
+            {actionData?.errors ? (
+              <ul>
+                {Object.entries(actionData.errors).map(([key, value]) => (
+                  <li key={key} className="col-span-6">
+                    <FormErrorMessage>{value}</FormErrorMessage>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
           </div>
-        ) : null}
-        <div className="space-x-2">
-          <Button variant="outline" type="button" onClick={() => navigate(-1)}>
-            Cancel
-          </Button>
-          <Button type="submit">
-            {transition.state === "submitting" ? "Saving..." : "Save"}
-          </Button>
-        </div>
-      </fieldset>
-    </Form>
+          <div>
+            <Button type="submit">Upload</Button>
+          </div>
+          <input
+            type="hidden"
+            name="formType"
+            value={formTypes.functionUpload}
+          />
+        </Form>
+      </CardContent>
+    </Card>
   );
 }
 

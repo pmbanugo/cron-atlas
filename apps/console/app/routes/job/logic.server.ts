@@ -1,6 +1,6 @@
 import { ulid } from "ulidx";
 import type { CronJobFormData } from "~/components/job-form";
-import { getFlyAppName, raiseError } from "~/lib/utils";
+import { getEnv, getFlyAppName, raiseError } from "~/lib/utils";
 import { createClient } from "fly-admin";
 import { json } from "@remix-run/node";
 import { buildDbClient } from "~/data/db";
@@ -30,9 +30,7 @@ export async function createScheduledFunction({
   formData.append("jobId", jobId);
   formData.append("file", data.file);
 
-  const functionStoreUrl =
-    process.env.FUNCTION_STORE_DOMAIN ??
-    raiseError("missing function store url in environment");
+  const functionStoreUrl = getEnv("FUNCTION_STORE_DOMAIN");
   const uploadRequestPromise = fetch(functionStoreUrl, {
     method: "POST",
     body: formData,

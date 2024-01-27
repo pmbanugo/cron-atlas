@@ -1,10 +1,11 @@
 import type { ScheduleSpec, ScheduleUpdateOptions } from "@temporalio/client";
-import { MONTHS } from "@temporalio/client";
 import { getClient } from "./client";
 import type { ScheduleType } from "~/data/types";
 import { getScheduleId } from "@cron-atlas/workflow";
+import type { ScheduledFunctionArgs } from "./common";
+import { getScheduleSpecification } from "./common";
 
-export async function update({
+export async function updateApiSchedule({
   jobId,
   schedule: { scheduleType, value: scheduleValue },
 }: {
@@ -12,50 +13,61 @@ export async function update({
   schedule: { value: string; scheduleType: ScheduleType };
 }) {
   const client = await getClient();
-
-  let spec: ScheduleSpec;
-  switch (scheduleType) {
-    case "interval":
-      spec = {
-        intervals: [{ every: scheduleValue }],
-      };
-      break;
-    case "cron":
-      spec = {
-        cronExpressions: [scheduleValue],
-      };
-      break;
-    case "once":
-      const date = new Date(scheduleValue);
-      spec = {
-        calendars: [
-          {
-            //Might be better not to use UTC time and justspecify the IANA timezone used for the schedule
-            comment: `once at ${scheduleValue}`,
-            year: date.getUTCFullYear(),
-            month: MONTHS[date.getUTCMonth()],
-            dayOfMonth: date.getUTCDate(),
-            hour: date.getUTCHours(),
-            minute: date.getUTCMinutes(),
-            second: date.getUTCSeconds(),
-          },
-        ],
-      };
-      break;
-    default:
-      throw new Error("Invalid schedule type");
-  }
+  const scheduleSpec: ScheduleSpec = getScheduleSpecification(
+    scheduleType,
+    scheduleValue
+  );
 
   const handle = client.schedule.getHandle(
     getScheduleId({ id: jobId, isScheduledFunction: false })
   );
   await handle.update((schedule: ScheduleUpdateOptions) => {
-    schedule.spec = spec;
+    schedule.spec = scheduleSpec;
     return schedule;
   });
 
-  console.log(`Updated schedule '${handle.scheduleId}'.`);
+  console.info(`Updated schedule for job'${jobId}'.`);
+}
 
-  //TODO: Do we need to close the connection? or can we keep it open forever?
-  // await client.connection.close();
+export async function updateFunctionSchedule({
+  jobId,
+  schedule: { scheduleType, value: scheduleValue },
+}: {
+  jobId: string;
+  schedule: { value: string; scheduleType: ScheduleType };
+}) {
+  const client = await getClient();
+  const scheduleSpec: ScheduleSpec = getScheduleSpecification(
+    scheduleType,
+    scheduleValue
+  );
+
+  const handle = client.schedule.getHandle(
+    getScheduleId({ id: jobId, isScheduledFunction: true })
+  );
+  await handle.update((schedule: ScheduleUpdateOptions) => {
+    schedule.spec = scheduleSpec;
+    return schedule;
+  });
+
+  console.info(`Updated schedule for job'${jobId}'.`);
+}
+
+export async function updateScheduledFunctionArgs({
+  jobId,
+  userId,
+  flyAppName,
+  runtimeImage,
+}: Omit<ScheduledFunctionArgs, "schedule">) {
+  const client = await getClient();
+
+  const handle = client.schedule.getHandle(
+    getScheduleId({ id: jobId, isScheduledFunction: true })
+  );
+  await handle.update((schedule: ScheduleUpdateOptions) => {
+    schedule.action.args = [{ userId, jobId, flyAppName, runtimeImage }];
+    return schedule;
+  });
+
+  console.info(`Updated schedule  for job'${jobId}'.`);
 }
