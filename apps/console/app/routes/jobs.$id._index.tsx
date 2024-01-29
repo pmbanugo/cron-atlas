@@ -61,7 +61,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       },
     });
     if (!existingJob) {
-      return new Response("Unauthorized", { status: 401 });
+      return redirect("/404");
     }
 
     const functionStoreUrl = getEnv("FUNCTION_STORE_DOMAIN");
@@ -120,7 +120,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       },
     });
     if (!existingJob) {
-      return new Response("Unauthorized", { status: 401 });
+      return redirect("/404");
     }
 
     await db
