@@ -4,4 +4,10 @@ export const SCHEDULE_TYPES = {
   once: "once",
 } as const;
 
+
 export type ScheduleType = keyof typeof SCHEDULE_TYPES;
+
+export type ActionDataResponse = {
+  msg: string;
+  key: string;
+};
