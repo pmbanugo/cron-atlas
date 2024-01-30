@@ -5,18 +5,11 @@ import {
 } from "@remix-run/node";
 import { buildDbClient } from "~/data/db";
 import { jobs } from "~/data/schema";
-import { startApiSchedule } from "~/cron/start-schedule";
-import type { ScheduleType } from "~/data/types";
 import type { CronJobFormData } from "~/components/job-form";
-import {
-  CronJobForm,
-  jobTypes,
-  runtimes,
-  scheduleTypes,
-} from "~/components/job-form";
+import { CronJobForm, jobTypes, scheduleTypes } from "~/components/job-form";
 import { getSessionManager } from "~/lib/session.server";
 import { eq, sql } from "drizzle-orm";
-import { createScheduledFunction } from "./logic.server";
+import { saveJob } from "./logic.server";
 
 export const meta: MetaFunction = () => {
   return [
@@ -64,53 +57,20 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     return { errors: { generic: "You can't create more than 4 jobs" } };
   }
 
-  switch (jobType) {
-    case "url": {
-      if (!url) {
-        return { errors: { generic: "URL is required" } };
-      }
+  const saveResult = await saveJob({
+    name,
+    url,
+    schedule,
+    scheduleType,
+    jobType,
+    runtime,
+    file,
+    userId,
+    db,
+  });
 
-      const result = await db
-        .insert(jobs)
-        .values({
-          name,
-          endpoint: { url: url },
-          jobType,
-          schedule: {
-            type: scheduleType as ScheduleType,
-            value: schedule,
-          },
-          userId,
-        })
-        .returning({ jobId: jobs.id });
-
-      await startApiSchedule({
-        url: url,
-        jobId: result[0].jobId,
-        schedule: {
-          scheduleType: scheduleType as ScheduleType,
-          value: schedule,
-        },
-      });
-
-      break;
-    }
-    case "function": {
-      if (!runtime || !Object.keys(runtimes).includes(runtime)) {
-        throw new Error("Invalid runtime value");
-      }
-      if (!file || file.type !== "text/javascript" || file.size === 0) {
-        return { errors: { file: "File must be a JS file." } };
-      }
-
-      await createScheduledFunction({
-        data: { name, schedule, scheduleType, runtime, file, jobType },
-        userId,
-      });
-      break;
-    }
-    default:
-      throw new Error(`Invalid job type: ${jobType}`);
+  if (saveResult) {
+    return saveResult;
   }
 
   return redirect("/");

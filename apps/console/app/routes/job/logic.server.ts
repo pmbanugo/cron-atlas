@@ -1,13 +1,81 @@
 import { ulid } from "ulidx";
-import type { CronJobFormData } from "~/components/job-form";
+import { runtimes, type CronJobFormData } from "~/components/job-form";
 import { getEnv, getFlyAppName, raiseError } from "~/lib/utils";
 import { createClient } from "fly-admin";
 import { json } from "@remix-run/node";
 import { buildDbClient } from "~/data/db";
 import { jobs } from "~/data/schema";
 import type { ScheduleType } from "~/data/types";
-import { startScheduledFunction } from "~/cron/start-schedule";
+import {
+  startApiSchedule,
+  startScheduledFunction,
+} from "~/cron/start-schedule";
 import { deleteSchedule } from "~/cron/delete-schedule";
+
+export async function saveJob({
+  name,
+  url,
+  schedule,
+  scheduleType,
+  jobType,
+  runtime,
+  file,
+  userId,
+  db,
+}: Required<Omit<CronJobFormData, "file" | "runtime" | "url">> &
+  Pick<CronJobFormData, "file" | "runtime" | "url"> & {
+    userId: string;
+    db: ReturnType<typeof buildDbClient>;
+  }) {
+  switch (jobType) {
+    case "url": {
+      if (!url) {
+        return { errors: { generic: "URL is required" } };
+      }
+
+      const result = await db
+        .insert(jobs)
+        .values({
+          name,
+          endpoint: { url: url },
+          jobType,
+          schedule: {
+            type: scheduleType as ScheduleType,
+            value: schedule,
+          },
+          userId,
+        })
+        .returning({ jobId: jobs.id });
+
+      await startApiSchedule({
+        url: url,
+        jobId: result[0].jobId,
+        schedule: {
+          scheduleType: scheduleType as ScheduleType,
+          value: schedule,
+        },
+      });
+
+      break;
+    }
+    case "function": {
+      if (!runtime || !Object.keys(runtimes).includes(runtime)) {
+        throw new Error("Invalid runtime value");
+      }
+      if (!file || file.type !== "text/javascript" || file.size === 0) {
+        return { errors: { file: "File must be a JS file." } };
+      }
+
+      await createScheduledFunction({
+        data: { name, schedule, scheduleType, runtime, file, jobType },
+        userId,
+      });
+      break;
+    }
+    default:
+      throw new Error(`Invalid job type: ${jobType}`);
+  }
+}
 
 export async function createScheduledFunction({
   data,
