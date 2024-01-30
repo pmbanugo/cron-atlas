@@ -12,6 +12,7 @@ import type { CronJobFormData } from "~/components/job-form";
 import { CronJobForm } from "~/components/job-form";
 import { getSessionManager } from "~/lib/session.server";
 import { eq, sql } from "drizzle-orm";
+import * as v from "valibot";
 
 const scheduleTypes = {
   interval: "Interval",
@@ -34,18 +35,39 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const { name, url, schedule, scheduleType } = Object.fromEntries(
     formData
   ) as CronJobFormData;
-  if (
-    name === null ||
-    url === null ||
-    schedule === null ||
-    scheduleType === null ||
-    !Object.keys(scheduleTypes).includes(scheduleType)
-  ) {
-    throw new Error("Invalid form data");
-  }
 
-  if (name.length > 100) {
-    throw new Error("Name can't be more than 100 characters");
+  const urlSchema = v.string("Url must be a valid", [
+    v.url(),
+    v.regex(/@(?!google\.com)([A-Za-z0-9]+\.com)$/g, "Domain not allowed"),
+  ]);
+
+  const nameShema = v.string("Name is required", [v.minLength(3)]);
+
+  const scheduleTypeSchema = v.string("Schedule Type  is required", [
+    v.regex(/^(interval|cron|once)$/i),
+  ]);
+
+  const loginFormSchema = v.object({
+    name: nameShema,
+    url: urlSchema,
+    scheduleType: scheduleTypeSchema,
+  });
+  const validation =
+    loginFormSchema._parse({
+      name,
+      url,
+      schedule,
+      scheduleType,
+    }).issues || [];
+  if (validation.length > 0) {
+    const errorMessages = validation.map((v) => {
+      const key: any = v.path?.length ? v.path[0].key : "";
+      return {
+        msg: v.message,
+        key,
+      };
+    });
+    return json(errorMessages, 400);
   }
 
   const db = buildDbClient();
