@@ -43,7 +43,8 @@
     "stripe": "^14.10.0",
     "tailwind-merge": "2.1.0",
     "tailwindcss-animate": "1.0.7",
-    "ulidx": "2.2.1"
+    "ulidx": "2.2.1",
+    "valibot": "^0.27.1"
   },
   "devDependencies": {
     "@remix-run/dev": "2.3.1",
