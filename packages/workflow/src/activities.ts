@@ -1,12 +1,12 @@
 import { createHmac } from "node:crypto";
 import { Context, activityInfo } from "@temporalio/activity";
-import type { CronCallResult } from "./types";
+import type { RemoteJobResult } from "./types";
 import { createClient } from "fly-admin";
 import { ApiMachineRestartPolicyEnum } from "fly-admin/dist/lib/types";
 import { MachineState } from "fly-admin/dist/lib/machine";
 import { getEnv } from "./config";
 
-export async function callJobApi(url: string): Promise<CronCallResult> {
+export async function callJobApi(url: string): Promise<RemoteJobResult> {
   Context.current().log.info(`Calling URL ${url}`);
   const timeout = 60 * 1000; // 60 seconds
 
@@ -90,7 +90,7 @@ export function createMachine({
     app_name: flyAppName,
     config: {
       image:
-        "registry.fly.io/cronatlas-nodejs-alpine:deployment-01HMY71DG6ZDNHZ6J1BPSGHRH1",
+        "registry.fly.io/cronatlas-nodejs-alpine:deployment-01HND0APBR6G99MWVCZ42ETQPN",
       auto_destroy: true,
       restart: { policy: ApiMachineRestartPolicyEnum.No },
       guest: { cpu_kind: "shared", cpus: 1, memory_mb: 256 },

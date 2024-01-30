@@ -24,18 +24,26 @@ if (fileUrl && runId) {
   } catch (error) {
     console.error(error);
 
+    if (typeof error === "string") {
+      await sendSignal({ error: { message: error } });
+    }
     await sendSignal({
       error: {
         message: error instanceof Error ? error.message : "Unknown error",
+        stack: error instanceof Error ? error.stack : undefined,
       },
     });
   }
 } else {
-  console.error("missing CRONATLAS env vars");
-  await sendSignal({ error: { message: "missing CRONATLAS env vars" } });
+  console.error("missing CRONATLAS environment variables");
+  await sendSignal({
+    error: { message: "missing CRONATLAS environment variables" },
+  });
 }
 
-async function sendSignal(input?: { error?: { message: string } }) {
+async function sendSignal(input?: {
+  error?: { message: string; stack?: string };
+}) {
   const signalUrl = process.env["CRONATLAS_WORKFLOW_SIGNAL_URL"];
   if (signalUrl) {
     await request(signalUrl, {

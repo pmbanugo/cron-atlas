@@ -1,7 +1,10 @@
 import { ScheduleNotFoundError } from "@temporalio/client";
 import { getClient } from "./client";
+import type {
+  RemoteJobResult,
+  ScheduledFunctionResult,
+} from "@cron-atlas/workflow";
 import { getScheduleId } from "@cron-atlas/workflow";
-import type { CronCallResult } from "@cron-atlas/workflow";
 
 export async function getRecent({
   jobId,
@@ -29,9 +32,9 @@ export async function getRecent({
       recentActionsWorkflowId
         .map(
           ({ workflowId }) =>
-            client.workflow
-              .getHandle(workflowId)
-              .result() as Promise<CronCallResult>
+            client.workflow.getHandle(workflowId).result() as Promise<
+              RemoteJobResult | ScheduledFunctionResult
+            >
         )
         .filter(Boolean)
     );

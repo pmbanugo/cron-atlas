@@ -2,13 +2,13 @@ import { createHmac } from "node:crypto";
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { object, string, optional, parse, ValiError } from "valibot";
 import { signalJobFinished } from "~/cron/signal";
-import { raiseError } from "~/lib/utils";
+import { getEnv } from "~/lib/utils";
 
 const SignalSchema = object({
   runId: string(),
   machineId: string(),
   workflowId: string(),
-  error: optional(object({ message: string() })),
+  error: optional(object({ message: string(), stack: optional(string()) })),
 });
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -18,9 +18,7 @@ export async function action({ request }: ActionFunctionArgs) {
     if (
       !isSignedUrlValid({
         urlString: request.url,
-        secret:
-          process.env.WORKFLOW_SIGNAL_SIGNING_SECRET ||
-          raiseError("WORKFLOW_SIGNAL_SIGNING_SECRET is not set"),
+        secret: getEnv("WORKFLOW_SIGNAL_SIGNING_SECRET"),
         runId: signal.runId,
         workflowId: signal.workflowId,
       })

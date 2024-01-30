@@ -9,6 +9,11 @@ import { getRecent } from "~/cron/schedule-history";
 import { getSessionManager } from "~/lib/session.server";
 import { Gauge } from "lucide-react";
 import { useLoaderData } from "@remix-run/react";
+import type { JobType } from "~/data/types";
+import type {
+  RemoteJobResult,
+  ScheduledFunctionResult,
+} from "@cron-atlas/workflow";
 
 export const meta: MetaFunction = () => {
   return [
@@ -20,15 +25,16 @@ export const meta: MetaFunction = () => {
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   const sessionManager = getSessionManager();
   const userId = await sessionManager.requireUserId(request);
+  const jobId = params.id;
 
-  if (!params.id) {
+  if (!jobId) {
     return redirect("/404");
   }
 
   const db = buildDbClient();
   const job = await db.query.jobs.findFirst({
-    columns: { endpoint: true, id: true, name: true },
-    where: and(eq(jobs.id, params.id), eq(jobs.userId, userId)),
+    columns: { endpoint: true, id: true, name: true, jobType: true },
+    where: and(eq(jobs.id, jobId), eq(jobs.userId, userId)),
   });
 
   if (!job) {
@@ -38,12 +44,16 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   return json({
     name: job.name,
     url: job.endpoint.url,
-    runInfo: await getRecent({ jobId: job.id, isScheduledFunction: false }),
+    jobType: job.jobType,
+    runInfo: await getRecent({
+      jobId: job.id,
+      isScheduledFunction: job.jobType === "function",
+    }),
   });
 };
 
 export default function Detail() {
-  const { name, runInfo } = useLoaderData<typeof loader>();
+  const { name, runInfo, jobType } = useLoaderData<typeof loader>();
 
   return (
     <main className="flex flex-col items-center justify-center p-4">
@@ -71,14 +81,7 @@ export default function Detail() {
                     <p className="font-medium">
                       Job #{runInfo.totalActions - index}
                     </p>
-                    <p className="text-sm text-gray-600">
-                      Status:{" "}
-                      {action.result.timeout
-                        ? "Timeout"
-                        : action.result.success
-                        ? `Successful HTTP (${action.result.status})`
-                        : `Failed HTTP (${action.result.status})`}
-                    </p>
+                    <Result result={action.result} jobType={jobType} />
                     <p className="text-sm text-gray-500">
                       Time: {action.takenAt}
                     </p>
@@ -92,5 +95,37 @@ export default function Detail() {
         </CardContent>
       </Card>
     </main>
+  );
+}
+
+function Result({
+  result,
+  jobType,
+}: {
+  result: RemoteJobResult | ScheduledFunctionResult;
+  jobType: JobType;
+}) {
+  return (
+    <>
+      {"success" in result ? (
+        <p className="text-sm text-gray-600">
+          Status:{" "}
+          {result.timeout
+            ? "Timeout"
+            : result.success
+            ? `Successful HTTP (${result.status})`
+            : `Failed HTTP (${result.status})`}
+        </p>
+      ) : (
+        <p className="text-sm text-gray-600">
+          Status:{" "}
+          {result.timeout
+            ? "Timeout"
+            : result.error
+            ? "Function exited with an error"
+            : "Function completed successfully"}
+        </p>
+      )}
+    </>
   );
 }

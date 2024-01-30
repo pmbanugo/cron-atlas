@@ -4,7 +4,7 @@ export interface JobFinishedInput {
   runId: string;
   workflowId: string;
   machineId: string;
-  error?: { message: string };
+  error?: { message: string; stack?: string };
 }
 
 export const jobFinishedSignal =

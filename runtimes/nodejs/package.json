@@ -8,14 +8,14 @@
   "scripts": {
     "build": "tsc",
     "build:watch": "tsc -w",
-    "build:alpine": "fly deploy --remote-only --build-only --dockerfile Dockerfile.alpine --app cronatlas-nodejs-alpine",
-    "build:slim": "fly deploy --remote-only --build-only --dockerfile Dockerfile.slim --app cronatlas-nodejs-slim",
+    "build:alpine": "fly deploy --remote-only --dockerfile Dockerfile.alpine --app cronatlas-nodejs-alpine --build-only --push",
+    "build:slim": "fly deploy --remote-only --dockerfile Dockerfile.slim --app cronatlas-nodejs-slim --build-only --push",
     "typecheck": "tsc --noEmit",
     "start": "node build/runtime.js",
     "start:dev": "tsimp src/runtime.ts"
   },
   "dependencies": {
-    "undici": "6.4.0"
+    "undici": "6.5.0"
   },
   "devDependencies": {
     "@remix-run/eslint-config": "2.3.1",

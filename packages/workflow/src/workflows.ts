@@ -6,7 +6,7 @@ import {
   log,
 } from "@temporalio/workflow";
 import type * as activities from "./activities";
-import type { CronCallResult } from "./types";
+import type { RemoteJobResult, ScheduledFunctionResult } from "./types";
 import type { JobFinishedInput } from "./signal";
 import { jobFinishedSignal } from "./signal";
 
@@ -33,7 +33,7 @@ export async function triggerJob({
   url,
 }: {
   url: string;
-}): Promise<CronCallResult> {
+}): Promise<RemoteJobResult> {
   return await callJobApi(url);
 }
 
@@ -47,8 +47,10 @@ export async function runScheduledFunction({
   jobId: string;
   flyAppName: string;
   runtimeImage: string;
-}) {
+}): Promise<ScheduledFunctionResult> {
   let jobFinishedSuccessfully = false;
+  let jobErrorResult: undefined | ScheduledFunctionResult["error"];
+
   const machine = await createMachine({
     flyAppName,
     runtimeImage,
@@ -58,7 +60,7 @@ export async function runScheduledFunction({
 
   setHandler(
     jobFinishedSignal,
-    ({ workflowId, machineId, runId }: JobFinishedInput) => {
+    ({ workflowId, machineId, runId, error }: JobFinishedInput) => {
       const currentWorkflowId = workflowInfo().workflowId;
 
       if (
@@ -67,6 +69,7 @@ export async function runScheduledFunction({
         workflowInfo().runId === runId
       ) {
         log.debug("Job finished successfully");
+        jobErrorResult = error;
         jobFinishedSuccessfully = true;
       }
     }
@@ -80,5 +83,5 @@ export async function runScheduledFunction({
     await deleteMachine({ id: machine.id, flyAppName });
   }
 
-  return { timeout: jobTimedOut };
+  return { timeout: jobTimedOut, error: jobErrorResult };
 }
