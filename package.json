@@ -5,13 +5,11 @@
   "description": "a reliable serverless job scheduler",
   "scripts": {
     "start:temporal-server": "temporal server start-dev --db-filename temporal.db",
-    "deploy:console": "fly deploy --remote-only --config apps/console/fly.toml --dockerfile apps/console/Dockerfile",
+    "deploy:console": "fly deploy --remote-only --config apps/console/fly.toml --dockerfile apps/console/Dockerfile --ignorefile apps/console/.dockerignore",
+    "deploy:worker": "fly deploy --remote-only --config apps/worker/fly.toml --dockerfile apps/worker/Dockerfile --ignorefile apps/worker/.dockerignore",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "Peter Mbanugo",
-  "license": "AGPL-3.0",
-  "devDependencies": {
-    "esbuild": "0.19.11"
-  }
+  "license": "AGPL-3.0"
 }

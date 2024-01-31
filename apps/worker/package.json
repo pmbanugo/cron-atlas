@@ -6,8 +6,8 @@
   "main": "build/index.js",
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "build": "esbuild ./src/index.ts --outdir=build --bundle --platform=node --target=node20.6 --packages=external",
-    "build:watch": "esbuild ./src/index.ts --outdir=build --bundle --platform=node --target=node20.6 --packages=external --watch",
+    "build": "esbuild ./src/index.ts --outdir=build --bundle --platform=node --target=node20.10 --packages=external",
+    "build:watch": "esbuild ./src/index.ts --outdir=build --bundle --platform=node --target=node20.10 --packages=external --watch",
     "start": "node ./build/index.js",
     "start:dev": "node --env-file=.env --watch ./build/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -18,6 +18,7 @@
     "@temporalio/activity": "1.9.0",
     "@temporalio/worker": "1.9.0",
     "@temporalio/workflow": "1.9.0",
+    "esbuild": "0.19.11",
     "pino": "^8.17.2"
   },
   "devDependencies": {
