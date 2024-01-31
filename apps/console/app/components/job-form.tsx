@@ -250,7 +250,7 @@ export function CronJobForm({
                 )}
               </div>
 
-              {jobType === "function" && <SecretsForm />}
+              {!job && jobType === "function" && <SecretsForm />}
             </div>
 
             {actionData?.errors?.generic ? (
