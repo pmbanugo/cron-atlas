@@ -58,8 +58,7 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
           .where(and(eq(jobs.id, jobId), eq(jobs.userId, userId)));
         break;
       }
-      //default deletes url function type because some early DB data didn't have the jobType column
-      default: {
+      case "url": {
         await deleteSchedule({
           jobId: jobId,
           isScheduledFunction: false,
@@ -79,6 +78,8 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
           .where(and(eq(jobs.id, jobId), eq(jobs.userId, userId)));
         break;
       }
+      default:
+        break;
     }
     return redirect("/");
   }
