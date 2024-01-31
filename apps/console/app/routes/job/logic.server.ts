@@ -12,6 +12,11 @@ import {
 } from "~/cron/start-schedule";
 import { deleteSchedule } from "~/cron/delete-schedule";
 
+type Secret = {
+  key: string;
+  value: string;
+};
+
 export async function saveJob({
   name,
   url,
@@ -20,11 +25,16 @@ export async function saveJob({
   jobType,
   runtime,
   file,
+  secretKeys,
+  secretValues,
   userId,
   db,
-}: Required<Omit<CronJobFormData, "file" | "runtime" | "url">> &
+}: // Perhaps have two types for expected FormData. One to match the case of jobType === "url", and another for jobType === "function". This way, we might have a better type safety and inference.
+Required<Omit<CronJobFormData, "file" | "runtime" | "url">> &
   Pick<CronJobFormData, "file" | "runtime" | "url"> & {
     userId: string;
+    secretKeys: FormDataEntryValue[];
+    secretValues: FormDataEntryValue[];
     db: ReturnType<typeof buildDbClient>;
   }) {
   switch (jobType) {
@@ -66,8 +76,20 @@ export async function saveJob({
         return { errors: { file: "File must be a JS file." } };
       }
 
+      let secrets;
+      try {
+        secrets = getSecretsMap(secretKeys, secretValues);
+      } catch (error) {
+        if (error instanceof Error) {
+          return { errors: { generic: error.message } };
+        }
+        return {
+          errors: { generic: "internal server error when saving secrets" },
+        };
+      }
+
       await createScheduledFunction({
-        data: { name, schedule, scheduleType, runtime, file, jobType },
+        data: { name, schedule, scheduleType, runtime, file, jobType, secrets },
         userId,
       });
       break;
@@ -81,7 +103,9 @@ export async function createScheduledFunction({
   data,
   userId,
 }: {
-  data: Required<Omit<CronJobFormData, "url">>;
+  data: Required<
+    Omit<CronJobFormData, "url" | "secretKeys" | "secretValues">
+  > & { secrets: Secret[] };
   userId: string;
 }) {
   const flyOrgSlug =
@@ -129,20 +153,13 @@ export async function createScheduledFunction({
     jobId,
   });
 
-  console.log({
-    id: jobId,
-    name: data.name,
-    endpoint: { url: "" },
-    jobType: "function",
-    functionConfig: {
-      runtime: data.runtime,
-    },
-    schedule: {
-      type: data.scheduleType,
-      value: data.schedule,
-    },
-    userId,
-  });
+  if (data.secrets.length > 0) {
+    await flyClient.Secret.setSecrets({
+      appId: flyAppName,
+      secrets: data.secrets,
+      replaceAll: true,
+    });
+  }
 
   const db = buildDbClient();
   const insertPromise = db
@@ -154,6 +171,10 @@ export async function createScheduledFunction({
       jobType: "function",
       functionConfig: {
         runtime: data.runtime,
+        secrets:
+          data.secrets.length > 0
+            ? data.secrets.map((secret) => secret.key)
+            : undefined,
       },
       schedule: {
         type: data.scheduleType as ScheduleType,
@@ -191,6 +212,32 @@ export async function createScheduledFunction({
     });
   }
   // ignore the failure of the `schedulePromise` for now, because it can be manually fixed by admin or user later.
+}
+
+function getSecretsMap(
+  keys: FormDataEntryValue[],
+  values: FormDataEntryValue[]
+) {
+  // Ensures that the number of keys and values is the same
+  if (keys.length !== values.length) {
+    throw new Error("The number of secret keys and values must be the same.");
+  }
+
+  const result: Secret[] = [];
+  for (let i = 0; i < keys.length; i++) {
+    const key = keys[i];
+    const value = values[i];
+
+    if ((key && !value) || (!key && value))
+      throw new Error("invalid secret key/pair");
+    if (typeof key !== "string" || typeof value !== "string")
+      throw new Error("invalid secret key/pair");
+
+    if (key && value) {
+      result.push({ key, value });
+    }
+  }
+  return result;
 }
 
 /** rolls back every action before now. It's also a compensation logic, so perhaps find a better name for the handleCompensation() function so that it's clear about the difference between the two compensation logic. */

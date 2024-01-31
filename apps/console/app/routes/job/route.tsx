@@ -57,6 +57,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     return { errors: { generic: "You can't create more than 4 jobs" } };
   }
 
+  const secretKeys = formData.getAll("secretKeys");
+  const secretValues = formData.getAll("secretValues");
+
   const saveResult = await saveJob({
     name,
     url,
@@ -65,6 +68,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     jobType,
     runtime,
     file,
+    secretKeys,
+    secretValues,
     userId,
     db,
   });

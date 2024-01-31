@@ -65,8 +65,8 @@ importers:
         specifier: 0.29.3
         version: 0.29.3(@libsql/client@0.4.0-pre.7)(@types/react@18.2.20)(react@18.2.0)
       fly-admin:
-        specifier: 1.4.0
-        version: 1.4.0
+        specifier: 1.5.0
+        version: 1.5.0
       isbot:
         specifier: 3.6.8
         version: 3.6.8
@@ -249,8 +249,8 @@ importers:
         specifier: ^1.9.0
         version: 1.9.0
       fly-admin:
-        specifier: 1.4.0
-        version: 1.4.0
+        specifier: 1.5.0
+        version: 1.5.0
     devDependencies:
       "@remix-run/eslint-config":
         specifier: 2.4.1
@@ -8688,10 +8688,10 @@ packages:
       }
     dev: true
 
-  /fly-admin@1.4.0:
+  /fly-admin@1.5.0:
     resolution:
       {
-        integrity: sha512-IzLegEfBIICShPuqNAh5JeOcvPMXeYws6V6/UNeMZ9fmnPB+NLgLZtm+1gDzNEeMSBS/C6sikCPm+UF5yiKjzw==,
+        integrity: sha512-lsyRs+IOSEooNYcNgz7kiVycqZ9nsW8Ro+M+sfW8ubQHXkfgqHKn78kTjuTmu9AMnu1/r9W/B+tgI6CBedeJmg==,
       }
     dependencies:
       cross-fetch: 3.1.8
@@ -14254,7 +14254,10 @@ packages:
     dev: true
 
   /valibot@0.26.0:
-    resolution: {integrity: sha512-cM8VM9jsJGx9P4qarZUBXd0I88OVI4ddtyZ1sAMiofC3Usj7Jxm2c8Xx5accdTrKc3CblO8yyytRaJ6lrsuA+Q==}
+    resolution:
+      {
+        integrity: sha512-cM8VM9jsJGx9P4qarZUBXd0I88OVI4ddtyZ1sAMiofC3Usj7Jxm2c8Xx5accdTrKc3CblO8yyytRaJ6lrsuA+Q==,
+      }
     dev: false
 
   /validate-npm-package-license@3.0.4:

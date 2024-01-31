@@ -19,6 +19,7 @@ import { useState } from "react";
 import type { FunctionRuntime, JobType, ScheduleType } from "~/data/types";
 import { FormErrorMessage, FormInfo } from "./form";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { MinusCircle, PlusCircle } from "lucide-react";
 
 export const scheduleTypes = {
   interval: "Interval",
@@ -248,6 +249,8 @@ export function CronJobForm({
                   </div>
                 )}
               </div>
+
+              {jobType === "function" && <SecretsForm />}
             </div>
 
             {actionData?.errors?.generic ? (
@@ -277,6 +280,43 @@ export function CronJobForm({
         />
       ) : null}
     </>
+  );
+}
+
+function SecretsForm() {
+  const [secretIds, setSecretIds] = useState([randomId()]);
+  return (
+    <div className="space-y-2 pt-4">
+      <div className="font-medium">Secrets</div>
+      <hr className="bg-border" />
+      {secretIds.map((id) => (
+        <div key={id} className="flex gap-2">
+          <div className="flex-auto space-y-1">
+            <Label>Key</Label>
+            <Input placeholder="Key" id="secretKeys" name="secretKeys" />
+          </div>
+          <div className="flex-auto space-y-1">
+            <Label>Value</Label>
+            <Input placeholder="Value" id="secretValues" name="secretValues" />
+          </div>
+          <div className="flex-none place-self-center pt-5">
+            <MinusCircle
+              className="text-muted-foreground w-5 h-5 cursor-pointer"
+              onClick={() => setSecretIds((ids) => ids.filter((x) => x !== id))}
+            />
+          </div>
+        </div>
+      ))}
+      <Button
+        type="button"
+        variant="outline"
+        size="sm"
+        className="text-muted-foreground"
+        onClick={() => setSecretIds((ids) => [...ids, randomId()])}
+      >
+        <PlusCircle className="w-4 h-4 mr-1" /> Add more
+      </Button>
+    </div>
   );
 }
 
@@ -356,4 +396,8 @@ function getSchedulePlaceholder(value: keyof typeof scheduleTypes) {
     default:
       break;
   }
+}
+
+function randomId() {
+  return Math.random().toString(32).slice(2);
 }

@@ -44,6 +44,7 @@ export const jobs = sqliteTable("jobs", {
   jobType: text("job_type").$type<JobType>().notNull().default("url"),
   functionConfig: text("function_config", { mode: "json" }).$type<{
     runtime: FunctionRuntime;
+    secrets?: string[];
   }>(),
   endpoint: text("endpoint", { mode: "json" })
     .$type<{
