@@ -79,7 +79,12 @@ export function CronJobForm({
   return (
     <>
       <Card className="p-6">
-        <Form method="post" className="space-y-8" encType="multipart/form-data">
+        <Form
+          method="post"
+          className="space-y-8"
+          encType="multipart/form-data"
+          autoComplete="off"
+        >
           <fieldset
             disabled={transition.state === "submitting"}
             className="space-y-6"
