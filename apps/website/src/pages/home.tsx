@@ -24,11 +24,11 @@ export default function Home() {
       </nav>
       <header className="text-center py-16">
         <h2 className="text-4xl font-bold mb-4">
-          Open-source modern Cron Job Scheduler for the Serverless Era
+          Open-source Scheduled Serverless Function, and Cron Job Scheduler
         </h2>
         <p className="max-w-xl mx-auto mb-8">
-          Schedule your tasks, and trigger your serverless function with ease
-          using our cloud-based cron job scheduler.
+          Run scheduled functions, or trigger your remote job endpoint our
+          cloud-based cron job scheduler.
         </p>
         <div className="flex justify-center gap-4">
           <Button asChild>
@@ -41,7 +41,7 @@ export default function Home() {
       </header>
       <section className="bg-white py-16">
         <div className="max-w-4xl mx-auto px-8">
-          <h3 className="text-3xl font-bold mb-8">Why use Cron Atlas?</h3>
+          <h3 className="text-3xl font-bold mb-8">Why Use Cron Atlas?</h3>
           <ul className="list-none space-y-4 pl-0">
             <li className="flex items-start space-x-2">
               <CheckCircle className="w-4 h-4 mt-1" />
@@ -49,18 +49,24 @@ export default function Home() {
             </li>
             <li className="flex items-start space-x-2">
               <CheckCircle className="w-4 h-4 mt-1" />
-              <span>Run as frequent as every 1 second.</span>
-            </li>
-            <li className="flex items-start space-x-2">
-              <CheckCircle className="w-4 h-4 mt-1" />
-              <span>Interactive UI to manage your cron jobs.</span>
+              <span>Run functions that last up to 10 (or more) minutes.</span>
             </li>
             <li className="flex items-start space-x-2">
               <CheckCircle className="w-4 h-4 mt-1" />
               <span>
-                Schedule triggers to call your serverless function (e.g. Netlify
-                Functions, Cloudflare Workers).
+                No runtime limitation. Harness the full power of Node.js or Bun
+                for your jobs/tasks.
               </span>
+            </li>
+            <li className="flex items-start space-x-2">
+              <CheckCircle className="w-4 h-4 mt-1" />
+              <span>
+                Powered by trusted technologies (e.g. Firecracker & Temporal).
+              </span>
+            </li>
+            <li className="flex items-start space-x-2">
+              <CheckCircle className="w-4 h-4 mt-1" />
+              <span>Interactive UI to manage your cron jobs.</span>
             </li>
             <li className="flex items-start space-x-2">
               <CheckCircle className="w-4 h-4 mt-1" />
@@ -75,7 +81,7 @@ export default function Home() {
       <section className="py-16">
         <div className="max-w-4xl mx-auto px-8">
           <h3 className="text-3xl font-bold mb-8">
-            Simple yet, Powerful Features
+            Simple, Yet Powerful Features 🔥
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <Card className="w-full">
@@ -90,10 +96,12 @@ export default function Home() {
             </Card>
             <Card className="w-full">
               <CardHeader>
-                <CardTitle>Unlimited invocations</CardTitle>
+                <CardTitle>Fast, Secure, and Isolated</CardTitle>
               </CardHeader>
               <CardContent>
-                Run as frequent as every 1 second, without any limits.
+                Thanks to Firecracker, each function execution happens in their
+                own microVM and private network. Function secrets are also
+                stored in a secure vault, by a trusted provider.
               </CardContent>
             </Card>
             <Card className="w-full">
@@ -107,11 +115,14 @@ export default function Home() {
             </Card>
             <Card className="w-full">
               <CardHeader>
-                <CardTitle>Secure</CardTitle>
+                <CardTitle>No Limit Serverless</CardTitle>
               </CardHeader>
               <CardContent>
-                Trigger jobs and verify the request using a secure signature.{" "}
-                <span className="text-sm text-zinc-500">(Coming soon).</span>
+                Run your functions/jobs as long as you want, using the full
+                potential of whatever runtime you choose (Node.js or Bun).{" "}
+                <span className="text-sm text-zinc-500">
+                  (Your wallet is the only limit 🤑).
+                </span>
               </CardContent>
             </Card>
             <Card className="w-full">
@@ -181,19 +192,36 @@ export default function Home() {
                 <CardTitle>Free</CardTitle>
               </CardHeader>
               <CardContent>
-                <p>Free forever with limits.</p>
+                <p>Free for one year.</p>
                 <ul className="list-none space-y-2 pl-0">
                   <li className="flex items-center space-x-2">
                     <CheckCircle className="w-4 h-4" />
-                    <span>Create up to 5 cron jobs/schedule</span>
+                    <span>Create up to 4 cron jobs/function</span>
                   </li>
                   <li className="flex items-center space-x-2">
                     <CheckCircle className="w-4 h-4" />
-                    <span>10000 job invocations per month</span>
+                    <span>10,000 remote job invocations (monthly)</span>
                   </li>
                   <li className="flex items-center space-x-2">
                     <CheckCircle className="w-4 h-4" />
-                    <span>Standard support and updates</span>
+                    <span>5,000 scheduled function run (monthly)</span>
+                  </li>
+                  <li className="flex items-center space-x-2">
+                    <CheckCircle className="w-4 h-4" />
+                    <span>Up to 10 mins function execution time</span>
+                  </li>
+                  <li className="flex items-center space-x-2">
+                    <CheckCircle className="w-4 h-4" />
+                    <span>
+                      Access to{" "}
+                      <a
+                        href="https://discord.gg/ph45BEUN"
+                        className="underline"
+                      >
+                        Discord
+                      </a>{" "}
+                      community & support.
+                    </span>
                   </li>
                 </ul>
               </CardContent>
@@ -209,20 +237,28 @@ export default function Home() {
               </CardHeader>
               <CardContent>
                 <p>
-                  <span className="line-through">$40</span> $20 / month
+                  <span className="line-through">$$</span> 🤔 / month
                 </p>
                 <ul className="list-none space-y-2 pl-0">
                   <li className="flex items-center space-x-2">
                     <CheckCircle className="w-4 h-4" />
-                    <span>Unlimited jobs/schedule.</span>
+                    <span>Unlimited cron job/function</span>
                   </li>
                   <li className="flex items-center space-x-2">
                     <CheckCircle className="w-4 h-4" />
-                    <span>Unlimited invocations</span>
+                    <span>Unlimited remote job invocation.</span>
                   </li>
                   <li className="flex items-center space-x-2">
                     <CheckCircle className="w-4 h-4" />
-                    <span>Priority support with quick help</span>
+                    <span>Unlimited scheduled function run.</span>
+                  </li>
+                  <li className="flex items-center space-x-2">
+                    <CheckCircle className="w-4 h-4" />
+                    <span>Access to GPU for ML or AI-related jobs</span>
+                  </li>
+                  <li className="flex items-center space-x-2">
+                    <CheckCircle className="w-4 h-4" />
+                    <span>Priority email support</span>
                   </li>
                 </ul>
               </CardContent>
