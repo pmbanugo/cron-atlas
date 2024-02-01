@@ -254,11 +254,11 @@ export default function Home() {
                   </li>
                   <li className="flex items-center space-x-2">
                     <CheckCircle className="w-4 h-4" />
-                    <span>Access to GPU for ML or AI-related jobs</span>
+                    <span>Up to 12 hours function execution time.</span>
                   </li>
                   <li className="flex items-center space-x-2">
                     <CheckCircle className="w-4 h-4" />
-                    <span>Priority email support</span>
+                    <span>Access to GPU for ML or AI-related jobs</span>
                   </li>
                 </ul>
               </CardContent>
