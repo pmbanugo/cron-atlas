@@ -41,7 +41,9 @@ export default function Home() {
       </header>
       <section className="bg-white py-16">
         <div className="max-w-4xl mx-auto px-8">
-          <h3 className="text-3xl font-bold mb-8">Why Use Cron Atlas?</h3>
+          <h3 className="text-3xl font-bold mb-8 text-center">
+            Why Use Cron Atlas?
+          </h3>
           <ul className="list-none space-y-4 pl-0">
             <li className="flex items-start space-x-2">
               <CheckCircle className="w-4 h-4 mt-1" />
@@ -78,9 +80,37 @@ export default function Home() {
           </ul>
         </div>
       </section>
+      <section className="bg-white pb-16">
+        <div className="max-w-4xl mx-auto px-8">
+          <h3 className="text-3xl font-bold text-center">
+            A sneak peek into Cron Atlas
+          </h3>
+          <div
+            style={{
+              position: "relative",
+              paddingBottom: "57.50798722044729%",
+              height: 0,
+            }}
+            className="mt-8"
+          >
+            <iframe
+              src="https://www.loom.com/embed/666953f8492748f3abb87e3df56824d2?sid=855a4418-45fc-4304-a781-b145a97404c8"
+              allowFullScreen
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%",
+                border: 0,
+              }}
+            ></iframe>
+          </div>
+        </div>
+      </section>
       <section className="py-16">
         <div className="max-w-4xl mx-auto px-8">
-          <h3 className="text-3xl font-bold mb-8">
+          <h3 className="text-3xl font-bold mb-8 text-center">
             Simple, Yet Powerful Features 🔥
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -146,46 +176,9 @@ export default function Home() {
           </div>
         </div>
       </section>
-      <section className="bg-white py-16">
-        <div className="max-w-4xl mx-auto px-8">
-          <h3 className="text-3xl font-bold text-center">
-            A sneak peek into the console
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="text-center">
-              <img
-                alt="Job schedule view"
-                className="rounded mx-auto"
-                height="500"
-                width="500"
-                src={createScheduleImage}
-                style={{
-                  aspectRatio: "500/500",
-                  objectFit: "contain",
-                }}
-              />
-              <p className="mt-2">Job Schedule View</p>
-            </div>
-            <div className="text-center">
-              <img
-                alt="Job Detail View"
-                className="rounded mx-auto"
-                height="500"
-                width="500"
-                src={jobMonitorImage}
-                style={{
-                  aspectRatio: "500/500",
-                  objectFit: "contain",
-                }}
-              />
-              <p className="mt-2">Job Detail View</p>
-            </div>
-          </div>
-        </div>
-      </section>
       <section className="bg-white py-16" id="pricing">
         <div className="max-w-4xl mx-auto px-8">
-          <h3 className="text-3xl font-bold mb-8">Pricing Plans</h3>
+          <h3 className="text-3xl font-bold mb-8 text-center">Pricing Plans</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <Card className="w-full bg-gray-200">
               <CardHeader>
@@ -286,7 +279,7 @@ export default function Home() {
       </section>
       <footer className="bg-white py-8">
         <div className="max-w-4xl mx-auto px-8 flex flex-col md:flex-row justify-between items-center">
-          <div className="text-center mt-4 md:mt-0">
+          <div className="text-center mx-auto mt-4 md:mt-0">
             <span>© 2024 Cron Atlas. All rights reserved.</span>
           </div>
         </div>
