@@ -171,7 +171,7 @@ export default function Home() {
                 <CardTitle>Durable & Reliable</CardTitle>
               </CardHeader>
               <CardContent>
-                Enjoyed a reliable product powered by modern cloud-native
+                Enjoy a reliable product powered by modern cloud-native
                 technologies.
               </CardContent>
             </Card>
