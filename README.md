@@ -46,7 +46,7 @@ While you can fork and run this on your computer, the fastest way to try it out 
 
 Blog posts & examples:
 
-- [Top Hacker News Story Aggregator Using Next.js, Resend and Cron Atlas](https://dev.to/pmbanugo/top-hacker-news-story-aggregator-using-nextjs-resend-and-cron-atlas-18k2)
+- [Top Hacker News Story Aggregator Using Next.js, Resend and Cron Atlas](https://dev.to/pmbanugo/top-hacker-news-story-aggregator-using-nextjs-resend-and-cron-atlas-18k2). FYI, you can do something similar by just creating a scheduled function to run directly on Cron Atlas (see this [video](https://www.loom.com/share/666953f8492748f3abb87e3df56824d2?sid=11521f04-36d7-4191-818e-cbf1579e17a4) for how to do that.)
 
 ## Contributing
 
