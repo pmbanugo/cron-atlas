@@ -35,7 +35,7 @@ export default function Home() {
       </nav>
       <header className="text-center py-16">
         <h2 className="text-4xl font-bold mb-4">
-          Open-source Scheduled Serverless Function, and Cron Job Scheduler
+          Open-Source Scheduled Serverless Function
         </h2>
         <p className="max-w-xl mx-auto mb-8">
           Run scheduled functions, or trigger your remote job endpoint our
