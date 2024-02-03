@@ -9,4 +9,5 @@ node_modules
 .DS_Store
 
 main.js
-!.dockerignore
+README.md
+fly.toml
