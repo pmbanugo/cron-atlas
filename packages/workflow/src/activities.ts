@@ -102,6 +102,7 @@ export function createMachine({
           runId,
           workflowId,
         }),
+        NODE_ENV: "production",
       },
     },
   });
