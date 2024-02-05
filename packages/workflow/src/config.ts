@@ -1,4 +1,5 @@
 import { ApplicationFailure } from "@temporalio/activity";
+import type { FunctionRuntime } from "./types";
 
 export const constants = {
   QUEUE: process.env.TEMPORAL_QUEUE || "cron-jobs",
@@ -26,6 +27,17 @@ export function getScheduleId({
   }
   return `cronjob-${id}` as const;
 }
+
+export const RUNTIME_IMAGE = {
+  "nodejs-alpine":
+    "registry.fly.io/cronatlas-nodejs-alpine:deployment-01HNWTP9KDXR2BT4PH2YEMYY7Y", //140MB
+  "nodejs-debian":
+    "registry.fly.io/cronatlas-nodejs-slim:deployment-01HNWTPKQKT34VJSQBH1SFZ77K", // 204MB
+  "bun-alpine":
+    "registry.fly.io/cronatlas-bun-alpine:deployment-01HNWTWCX7MFYDBB7075SG10BN", // 177MB
+  "bun-debian":
+    "registry.fly.io/cronatlas-bun-slim:deployment-01HNWTX1NBJJP0C8Y5DDSZG3M7", // 240MB
+} as const satisfies Record<FunctionRuntime, string>;
 
 export function getEnv(key: ENV_KEYS) {
   return process.env[key] ?? raiseError(`env ${key} not set`);

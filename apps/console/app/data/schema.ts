@@ -1,7 +1,8 @@
 import { text, sqliteTable, integer } from "drizzle-orm/sqlite-core";
-import type { FunctionRuntime, JobType, ScheduleType } from "./types";
+import type { JobType, ScheduleType } from "./types";
 import { ulid } from "ulidx";
 import { sql } from "drizzle-orm";
+import type { FunctionRuntime } from "@cron-atlas/workflow";
 
 export const users = sqliteTable("users", {
   id: text("id").primaryKey(),

@@ -16,10 +16,11 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { useState } from "react";
-import type { FunctionRuntime, JobType, ScheduleType } from "~/data/types";
+import type { JobType, ScheduleType } from "~/data/types";
 import { FormErrorMessage, FormInfo } from "./form";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { MinusCircle, PlusCircle } from "lucide-react";
+import type { FunctionRuntime } from "@cron-atlas/workflow";
 
 export const scheduleTypes = {
   interval: "Interval",

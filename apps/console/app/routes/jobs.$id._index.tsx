@@ -88,7 +88,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
     await updateScheduledFunctionArgs({
       jobId,
-      runtimeImage: runtime,
+      runtime,
       userId,
       flyAppName: getFlyAppName(jobId),
     });

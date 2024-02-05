@@ -1,3 +1,4 @@
+import type { FunctionRuntime } from "@cron-atlas/workflow";
 import type { ScheduleSpec } from "@temporalio/client";
 import { MONTHS } from "@temporalio/client";
 import type { ScheduleType } from "~/data/types";
@@ -6,7 +7,7 @@ export type ScheduledFunctionArgs = {
   jobId: string;
   userId: string;
   flyAppName: string;
-  runtimeImage: string;
+  runtime: FunctionRuntime;
   schedule: {
     value: string;
     scheduleType: ScheduleType;

@@ -57,7 +57,7 @@ export async function updateScheduledFunctionArgs({
   jobId,
   userId,
   flyAppName,
-  runtimeImage,
+  runtime,
 }: Omit<ScheduledFunctionArgs, "schedule">) {
   const client = await getClient();
 
@@ -65,7 +65,7 @@ export async function updateScheduledFunctionArgs({
     getScheduleId({ id: jobId, isScheduledFunction: true })
   );
   await handle.update((schedule: ScheduleUpdateOptions) => {
-    schedule.action.args = [{ userId, jobId, flyAppName, runtimeImage }];
+    schedule.action.args = [{ userId, jobId, flyAppName, runtime }];
     return schedule;
   });
 

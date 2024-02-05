@@ -6,7 +6,11 @@ import {
   log,
 } from "@temporalio/workflow";
 import type * as activities from "./activities";
-import type { RemoteJobResult, ScheduledFunctionResult } from "./types";
+import type {
+  FunctionRuntime,
+  RemoteJobResult,
+  ScheduledFunctionResult,
+} from "./types";
 import type { JobFinishedInput } from "./signal";
 import { jobFinishedSignal } from "./signal";
 
@@ -41,19 +45,19 @@ export async function runScheduledFunction({
   userId,
   jobId,
   flyAppName,
-  runtimeImage,
+  runtime,
 }: {
   userId: string;
   jobId: string;
   flyAppName: string;
-  runtimeImage: string;
+  runtime: FunctionRuntime;
 }): Promise<ScheduledFunctionResult> {
   let jobFinishedSuccessfully = false;
   let jobErrorResult: undefined | ScheduledFunctionResult["error"];
 
   const machine = await createMachine({
     flyAppName,
-    runtimeImage,
+    runtime,
     userId,
     jobId,
   });

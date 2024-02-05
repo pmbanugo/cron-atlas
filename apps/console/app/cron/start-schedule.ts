@@ -48,7 +48,7 @@ export async function startScheduledFunction({
   jobId,
   userId,
   flyAppName,
-  runtimeImage,
+  runtime,
   schedule: { scheduleType, value: scheduleValue },
 }: ScheduledFunctionArgs) {
   const client = await getClient();
@@ -62,7 +62,7 @@ export async function startScheduledFunction({
     action: {
       type: "startWorkflow",
       workflowType: runScheduledFunction,
-      args: [{ userId, jobId, flyAppName, runtimeImage }],
+      args: [{ userId, jobId, flyAppName, runtime }],
       taskQueue: constants.QUEUE,
     },
     scheduleId: getScheduleId({ id: jobId, isScheduledFunction: true }),

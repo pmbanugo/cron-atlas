@@ -188,7 +188,7 @@ export async function createScheduledFunction({
     jobId,
     userId,
     flyAppName,
-    runtimeImage: data.runtime,
+    runtime: data.runtime,
     schedule: {
       scheduleType: data.scheduleType as ScheduleType,
       value: data.schedule,

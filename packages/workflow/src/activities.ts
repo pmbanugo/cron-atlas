@@ -1,10 +1,10 @@
 import { createHmac } from "node:crypto";
 import { Context, activityInfo } from "@temporalio/activity";
-import type { RemoteJobResult } from "./types";
+import type { FunctionRuntime, RemoteJobResult } from "./types";
 import { createClient } from "fly-admin";
 import { ApiMachineRestartPolicyEnum } from "fly-admin/dist/lib/types";
 import { MachineState } from "fly-admin/dist/lib/machine";
-import { getEnv } from "./config";
+import { RUNTIME_IMAGE, getEnv } from "./config";
 
 export async function callJobApi(url: string): Promise<RemoteJobResult> {
   Context.current().log.info(`Calling URL ${url}`);
@@ -77,9 +77,10 @@ export function createMachine({
   flyAppName,
   userId,
   jobId,
+  runtime,
 }: {
   flyAppName: string;
-  runtimeImage: string;
+  runtime: FunctionRuntime;
   userId: string;
   jobId: string;
 }) {
@@ -89,8 +90,7 @@ export function createMachine({
   return fly.Machine.createMachine({
     app_name: flyAppName,
     config: {
-      image:
-        "registry.fly.io/cronatlas-nodejs-alpine:deployment-01HND0APBR6G99MWVCZ42ETQPN",
+      image: RUNTIME_IMAGE[runtime],
       auto_destroy: true,
       restart: { policy: ApiMachineRestartPolicyEnum.No },
       guest: { cpu_kind: "shared", cpus: 1, memory_mb: 256 },
