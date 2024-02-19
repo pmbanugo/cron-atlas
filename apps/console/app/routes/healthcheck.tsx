@@ -1,9 +1,9 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
-import { buildDbClient } from "~/data/db";
+import { getDbClient } from "~/data/db";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   try {
-    buildDbClient();
+    getDbClient();
     return new Response("OK");
   } catch (error: unknown) {
     console.error(request.url, "healthcheck ❌", { error });

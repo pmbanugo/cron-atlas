@@ -2,7 +2,7 @@ import { json, redirect } from "@remix-run/node";
 import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import { CardTitle, CardHeader, CardContent, Card } from "~/components/ui/card";
 import { Badge } from "~/components/ui/badge";
-import { buildDbClient } from "~/data/db";
+import { getDbClient } from "~/data/db";
 import { jobs } from "~/data/schema";
 import { and, eq } from "drizzle-orm";
 import { getRecent } from "~/cron/schedule-history";
@@ -31,7 +31,7 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
     return redirect("/404");
   }
 
-  const db = buildDbClient();
+  const db = getDbClient();
   const job = await db.query.jobs.findFirst({
     columns: { endpoint: true, id: true, name: true, jobType: true },
     where: and(eq(jobs.id, jobId), eq(jobs.userId, userId)),

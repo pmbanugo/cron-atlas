@@ -2,7 +2,7 @@ import type { LoaderFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { WorkOS } from "@workos-inc/node";
 import { eq } from "drizzle-orm";
-import { buildDbClient } from "~/data/db";
+import { getDbClient } from "~/data/db";
 import { users } from "~/data/schema";
 import { getSessionManager } from "~/lib/session.server";
 import { raiseError } from "~/lib/utils";
@@ -27,7 +27,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   try {
     const sessionManager = getSessionManager();
-    const db = buildDbClient();
+    const db = getDbClient();
     const existingUser = await db.query.users.findFirst({
       columns: { id: true },
       where: eq(users.id, user.id),

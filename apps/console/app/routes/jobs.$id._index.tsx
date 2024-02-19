@@ -5,7 +5,7 @@ import type {
   MetaFunction,
 } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { buildDbClient } from "~/data/db";
+import { getDbClient } from "~/data/db";
 import { jobs } from "~/data/schema";
 import type { ScheduleType } from "~/data/types";
 import { and, eq, sql } from "drizzle-orm";
@@ -53,7 +53,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       return { errors: { file: "File must be a JS file." } };
     }
 
-    const db = buildDbClient();
+    const db = getDbClient();
     const existingJob = await db.query.jobs.findFirst({
       where: and(eq(jobs.id, jobId), eq(jobs.userId, userId)),
       columns: {
@@ -112,7 +112,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       return { errors: { name: "Name must be less than 100 characters" } };
     }
 
-    const db = buildDbClient();
+    const db = getDbClient();
     const existingJob = await db.query.jobs.findFirst({
       where: and(eq(jobs.id, jobId), eq(jobs.userId, userId)),
       columns: {
@@ -172,7 +172,7 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
     return redirect("/404");
   }
 
-  const db = buildDbClient();
+  const db = getDbClient();
   const job = await db.query.jobs.findFirst({
     where: and(eq(jobs.id, params.id), eq(jobs.userId, userId)),
     columns: {

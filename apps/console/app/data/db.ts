@@ -3,7 +3,6 @@ import type { LibSQLDatabase } from "drizzle-orm/libsql";
 import { drizzle } from "drizzle-orm/libsql";
 import { createClient } from "@libsql/client";
 import * as schema from "./schema";
-// import type { AppLoadContext } from "@remix-run/node";
 
 function retrieveDbCredentials({
   url,
@@ -45,7 +44,11 @@ function retrieveDbCredentials({
 
 let drizzleClient: LibSQLDatabase<typeof schema> | null = null;
 
-export function buildDbClient() {
+/**
+ * Instantiate or return a drizzle database client
+ * @returns {LibSQLDatabase<typeof schema>}
+ */
+export function getDbClient() {
   const url = process.env.TURSO_DB_URL;
   const authToken = process.env.TURSO_DB_AUTH_TOKEN;
 

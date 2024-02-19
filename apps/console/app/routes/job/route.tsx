@@ -3,7 +3,7 @@ import {
   type ActionFunctionArgs,
   type MetaFunction,
 } from "@remix-run/node";
-import { buildDbClient } from "~/data/db";
+import { getDbClient } from "~/data/db";
 import { jobs } from "~/data/schema";
 import type { CronJobFormData } from "~/components/job-form";
 import { CronJobForm, jobTypes, scheduleTypes } from "~/components/job-form";
@@ -45,7 +45,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     return { errors: { name: "Name must be less than 100 characters" } };
   }
 
-  const db = buildDbClient();
+  const db = getDbClient();
   const countResult = await db
     .select({
       count: sql<number>`COUNT(*)`.mapWith(Number),

@@ -17,7 +17,7 @@ import styles from "~/tailwind.css";
 import { MainNav } from "~/components/nav";
 import { getSessionManager } from "./lib/session.server";
 import { UserMenu } from "./components/user-menu";
-import { buildDbClient } from "./data/db";
+import { getDbClient } from "./data/db";
 import { subscriptions } from "./data/schema";
 import { eq } from "drizzle-orm";
 
@@ -28,7 +28,7 @@ export const links: LinksFunction = () => [
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = await getSessionManager().requireUser(request);
-  const db = buildDbClient();
+  const db = getDbClient();
   const subscription = await db.query.subscriptions.findFirst({
     columns: { id: true },
     where: eq(subscriptions.userId, user.userId),

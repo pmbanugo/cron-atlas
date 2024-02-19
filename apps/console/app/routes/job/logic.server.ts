@@ -3,7 +3,7 @@ import { runtimes, type CronJobFormData } from "~/components/job-form";
 import { getEnv, getFlyAppName, raiseError } from "~/lib/utils";
 import { createClient } from "fly-admin";
 import { json } from "@remix-run/node";
-import { buildDbClient } from "~/data/db";
+import { getDbClient } from "~/data/db";
 import { jobs } from "~/data/schema";
 import type { ScheduleType } from "~/data/types";
 import {
@@ -35,7 +35,7 @@ Required<Omit<CronJobFormData, "file" | "runtime" | "url">> &
     userId: string;
     secretKeys: FormDataEntryValue[];
     secretValues: FormDataEntryValue[];
-    db: ReturnType<typeof buildDbClient>;
+    db: ReturnType<typeof getDbClient>;
   }) {
   switch (jobType) {
     case "url": {
@@ -161,7 +161,7 @@ export async function createScheduledFunction({
     });
   }
 
-  const db = buildDbClient();
+  const db = getDbClient();
   const insertPromise = db
     .insert(jobs)
     .values({

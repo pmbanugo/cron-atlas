@@ -1,7 +1,7 @@
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { eq } from "drizzle-orm";
 import Stripe from "stripe";
-import { buildDbClient } from "~/data/db";
+import { getDbClient } from "~/data/db";
 import { subscriptions, users } from "~/data/schema";
 import { raiseError } from "~/lib/utils";
 
@@ -45,7 +45,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         return new Response("Missing customer id", { status: 400 });
       }
 
-      const db = buildDbClient();
+      const db = getDbClient();
       const user = await db.query.users.findFirst({
         columns: { id: true },
         where: eq(users.email, session.customer_email),

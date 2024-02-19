@@ -1,7 +1,7 @@
 import { migrate } from "drizzle-orm/libsql/migrator";
-import { buildDbClient } from "~/data/db";
+import { getDbClient } from "~/data/db";
 
-const db = buildDbClient();
+const db = getDbClient();
 
 try {
   await migrate(db, {

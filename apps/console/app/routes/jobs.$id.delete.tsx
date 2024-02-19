@@ -1,6 +1,6 @@
 import { redirect, json } from "@remix-run/node";
 import type { ActionFunctionArgs } from "@remix-run/node";
-import { buildDbClient } from "~/data/db";
+import { getDbClient } from "~/data/db";
 import { jobs } from "~/data/schema";
 import { and, eq } from "drizzle-orm";
 import { getSessionManager } from "~/lib/session.server";
@@ -21,7 +21,7 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
     return redirect("/404");
   }
 
-  const db = buildDbClient();
+  const db = getDbClient();
   const job = await db.query.jobs.findFirst({
     columns: { id: true, jobType: true },
     where: and(eq(jobs.id, jobId), eq(jobs.userId, userId)),
