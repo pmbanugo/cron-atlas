@@ -28,7 +28,7 @@
     "@remix-run/react": "2.3.1",
     "@remix-run/serve": "2.3.1",
     "@temporalio/client": "1.9.0",
-    "@workos-inc/node": "5.1.1",
+    "@workos-inc/node": "6.0.1",
     "class-variance-authority": "0.7.0",
     "clsx": "2.1.0",
     "drizzle-orm": "0.29.3",

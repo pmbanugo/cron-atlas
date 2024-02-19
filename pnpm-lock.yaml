@@ -48,9 +48,15 @@ importers:
       "@temporalio/client":
         specifier: 1.9.0
         version: 1.9.0
+<<<<<<< HEAD
       "@workos-inc/node":
         specifier: 5.1.1
         version: 5.1.1
+=======
+      '@workos-inc/node':
+        specifier: 6.0.1
+        version: 6.0.1
+>>>>>>> 094fa13 (chore: upgrade workos-node client)
       class-variance-authority:
         specifier: 0.7.0
         version: 0.7.0
@@ -5247,16 +5253,18 @@ packages:
       "@xtuc/long": 4.2.2
     dev: false
 
+<<<<<<< HEAD
   /@workos-inc/node@5.1.1:
     resolution:
       {
         integrity: sha512-jkmsiGJnm55e+K1PXAJkHLfjJ+TMJHeU4ylvJAXYpB0l6jkziSoiyqfXJx0AFjuNWndP6jIA7jlWQZyrCA7txQ==,
       }
+=======
+  /@workos-inc/node@6.0.1:
+    resolution: {integrity: sha512-04uJNkrEtdyORRJDt1OyoCFbgC0hDVd7szXpelbBb0KpS0jHTNjXpaAAnM6t2e9cTSjJJRK5USPKutE3DMfRtA==}
+>>>>>>> 094fa13 (chore: upgrade workos-node client)
     dependencies:
-      axios: 1.6.5
       pluralize: 8.0.0
-    transitivePeerDependencies:
-      - debug
     dev: false
 
   /@xtuc/ieee754@1.2.0:
@@ -5686,6 +5694,7 @@ packages:
     engines: { node: ">=4" }
     dev: true
 
+<<<<<<< HEAD
   /axios@1.6.5:
     resolution:
       {
@@ -5699,6 +5708,8 @@ packages:
       - debug
     dev: false
 
+=======
+>>>>>>> 094fa13 (chore: upgrade workos-node client)
   /axobject-query@3.2.1:
     resolution:
       {
@@ -8401,6 +8412,7 @@ packages:
       - encoding
     dev: false
 
+<<<<<<< HEAD
   /follow-redirects@1.15.5:
     resolution:
       {
@@ -8414,6 +8426,8 @@ packages:
         optional: true
     dev: false
 
+=======
+>>>>>>> 094fa13 (chore: upgrade workos-node client)
   /for-each@0.3.3:
     resolution:
       {
@@ -11906,6 +11920,7 @@ packages:
       forwarded: 0.2.0
       ipaddr.js: 1.9.1
 
+<<<<<<< HEAD
   /proxy-from-env@1.1.0:
     resolution:
       {
@@ -11913,6 +11928,8 @@ packages:
       }
     dev: false
 
+=======
+>>>>>>> 094fa13 (chore: upgrade workos-node client)
   /pump@2.0.1:
     resolution:
       {
