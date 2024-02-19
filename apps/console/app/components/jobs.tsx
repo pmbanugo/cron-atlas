@@ -41,7 +41,7 @@ const jobTypes = {
   url: "Remote Job (URL)",
 } as const satisfies Record<JobType, string>;
 
-type JobDTO = Pick<Job, "id" | "name" | "schedule" | "endpoint" | "jobType">;
+type JobDTO = Pick<Job, "id" | "name" | "schedule" | "jobType">;
 type Jobs = JobDTO[];
 
 export function JobsTable({ jobs }: { jobs: Jobs }) {

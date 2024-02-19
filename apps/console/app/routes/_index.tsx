@@ -1,11 +1,9 @@
 import { json } from "@remix-run/node";
 import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
-import { eq } from "drizzle-orm";
 import { JobsTable } from "~/components/jobs";
 import { Button } from "~/components/ui/button";
-import { getDbClient } from "~/data/db";
-import { jobs } from "~/data/schema";
+import { getJobs } from "~/data/respository.server";
 import { getSessionManager } from "~/lib/session.server";
 
 export const meta: MetaFunction = () => {
@@ -18,18 +16,7 @@ export const meta: MetaFunction = () => {
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const sessionManager = getSessionManager();
   const user = await sessionManager.requireUser(request);
-
-  const db = getDbClient();
-  const data = await db.query.jobs.findMany({
-    columns: {
-      id: true,
-      name: true,
-      schedule: true,
-      endpoint: true,
-      jobType: true,
-    },
-    where: eq(jobs.userId, user.userId),
-  });
+  const data = await getJobs({ userId: user.userId });
 
   return json({ jobs: data });
 };

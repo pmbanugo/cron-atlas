@@ -46,7 +46,6 @@ let drizzleClient: LibSQLDatabase<typeof schema> | null = null;
 
 /**
  * Instantiate or return a drizzle database client
- * @returns {LibSQLDatabase<typeof schema>}
  */
 export function getDbClient() {
   const url = process.env.TURSO_DB_URL;

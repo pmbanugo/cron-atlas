@@ -71,7 +71,7 @@ export const jobs = sqliteTable("jobs", {
 
 export type Job = typeof jobs.$inferSelect;
 
-export const ApiTokens = sqliteTable("api_tokens", {
+export const apiTokens = sqliteTable("api_tokens", {
   id: text("id").primaryKey(),
   token: text("token").unique().notNull(),
   name: text("name", { length: 120 }).notNull(),
@@ -83,4 +83,4 @@ export const ApiTokens = sqliteTable("api_tokens", {
     .default(sql`(strftime('%s', 'now'))`),
 });
 
-export type ApiToken = typeof ApiTokens.$inferSelect;
+export type ApiToken = typeof apiTokens.$inferSelect;
