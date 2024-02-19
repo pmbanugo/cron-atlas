@@ -70,3 +70,17 @@ export const jobs = sqliteTable("jobs", {
 });
 
 export type Job = typeof jobs.$inferSelect;
+
+export const ApiTokens = sqliteTable("api_tokens", {
+  id: text("id").primaryKey(),
+  token: text("token").unique().notNull(),
+  name: text("name", { length: 120 }).notNull(),
+  userId: text("user_id")
+    .references(() => users.id, { onDelete: "cascade", onUpdate: "no action" })
+    .notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .notNull()
+    .default(sql`(strftime('%s', 'now'))`),
+});
+
+export type ApiToken = typeof ApiTokens.$inferSelect;
