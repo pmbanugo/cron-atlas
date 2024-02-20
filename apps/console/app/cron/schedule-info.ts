@@ -58,3 +58,29 @@ export async function getRecent({
   //TODO: Do we need to close the connection? or can we keep it open forever?
   // await client.connection.close();
 }
+
+export async function getDescription({
+  jobId,
+  isScheduledFunction,
+}: {
+  jobId: string;
+  isScheduledFunction: boolean;
+}) {
+  const client = await getClient();
+  try {
+    const handle = client.schedule.getHandle(
+      getScheduleId({ id: jobId, isScheduledFunction })
+    );
+    const scheduledescription = await handle.describe();
+
+    return {
+      paused: scheduledescription.state.paused,
+      totalJobExecutions: scheduledescription.info.numActionsTaken,
+    };
+  } catch (error) {
+    if (error instanceof ScheduleNotFoundError) {
+      console.error(`Schedule for job with ID '${jobId}' not found`);
+    }
+    return null;
+  }
+}

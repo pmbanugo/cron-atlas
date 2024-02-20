@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { getDbClient } from "./db";
 import { apiTokens, jobs } from "./schema";
 
@@ -14,6 +14,26 @@ export async function getJobs({ userId }: { userId: string }) {
     where: eq(jobs.userId, userId),
     orderBy: (jobs, { desc }) => [desc(jobs.id)],
   });
+  return data;
+}
+
+export async function getJob({
+  userId,
+  jobId,
+}: {
+  userId: string;
+  jobId: string;
+}) {
+  const db = getDbClient();
+  const data = await db.query.jobs.findFirst({
+    columns: {
+      createdAt: false,
+      updatedAt: false,
+      userId: false,
+    },
+    where: and(eq(jobs.id, jobId), eq(jobs.userId, userId)),
+  });
+
   return data;
 }
 
