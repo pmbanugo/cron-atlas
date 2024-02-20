@@ -1,9 +1,9 @@
 import type { FunctionRuntime } from "@cron-atlas/workflow";
 import { json, type LoaderFunctionArgs } from "@remix-run/node";
 import { getDescription } from "~/cron/schedule-info";
-import { getApiToken, getJob } from "~/data/respository.server";
+import { getJob } from "~/data/respository.server";
 import type { Job } from "~/data/schema";
-import { getApiTokenHash } from "~/lib/auth.server";
+import { requireUserId } from "~/lib/api.server";
 
 type BaseJobDTO = Pick<Job, "id" | "name" | "schedule" | "jobType"> & {
   paused: boolean;
@@ -24,18 +24,9 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     return new Response("Job Id is required in path", { status: 400 });
   }
 
-  const requestToken = request.headers.get("authentication");
-  if (!requestToken) {
-    return new Response("Unauthorized", { status: 401 });
-  }
+  const userId = await requireUserId(request);
 
-  const hashedToken = getApiTokenHash(requestToken.replace("Bearer ", ""));
-  const apiToken = await getApiToken(hashedToken);
-  if (!apiToken) {
-    return new Response("Unauthorized", { status: 401 });
-  }
-
-  const job = await getJob({ userId: apiToken.userId, jobId });
+  const job = await getJob({ userId, jobId });
   if (!job) {
     return new Response("Job not Found", { status: 404 });
   }
