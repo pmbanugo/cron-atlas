@@ -129,7 +129,7 @@
         }
       }
     },
-    "/jobs/{jobId}": {
+    "/jobs/{id}": {
       "put": {
         "tags": ["job"],
         "summary": "Update job's schedule, name, and url (if it's a url-based job)",
@@ -137,7 +137,7 @@
         "operationId": "updateJobById",
         "parameters": [
           {
-            "name": "jobId",
+            "name": "id",
             "in": "path",
             "description": "ID of job to update",
             "required": true,
@@ -190,7 +190,7 @@
         "operationId": "getJobById",
         "parameters": [
           {
-            "name": "jobId",
+            "name": "id",
             "in": "path",
             "description": "ID of job to return",
             "required": true,
@@ -239,7 +239,7 @@
         "operationId": "deleteJobById",
         "parameters": [
           {
-            "name": "jobId",
+            "name": "id",
             "in": "path",
             "description": "Id of the job to delete",
             "required": true,
@@ -261,7 +261,7 @@
         }
       }
     },
-    "/jobs/{jobId}/function-file": {
+    "/jobs/{id}/function-file": {
       "post": {
         "tags": ["job", "scheduled-function"],
         "summary": "Update the scheduled function file",
@@ -269,7 +269,7 @@
         "operationId": "updateScheduledFunctionFile",
         "parameters": [
           {
-            "name": "jobId",
+            "name": "id",
             "in": "path",
             "description": "ID of scheduled function to update",
             "required": true,
@@ -331,7 +331,7 @@
         }
       }
     },
-    "/jobs/{jobId}/secrets": {
+    "/jobs/{id}/secrets": {
       "post": {
         "tags": ["job", "scheduled-function"],
         "summary": "Update (or add) secrets for a scheduled function",
@@ -339,7 +339,7 @@
         "operationId": "updateScheduledFunctionSecrets",
         "parameters": [
           {
-            "name": "jobId",
+            "name": "id",
             "in": "path",
             "description": "ID of scheduled function to update",
             "required": true,
@@ -406,7 +406,7 @@
         "operationId": "deleteScheduledFunctionSecrets",
         "parameters": [
           {
-            "name": "jobId",
+            "name": "id",
             "in": "path",
             "description": "ID of scheduled function to update",
             "required": true,
