@@ -35,11 +35,11 @@ export default function Home() {
       </nav>
       <header className="text-center py-16">
         <h2 className="text-4xl font-bold mb-4">
-          Open-Source Scheduled Serverless Function
+          Serverless Cron Job & Scheduled Function Service
         </h2>
         <p className="max-w-xl mx-auto mb-8">
-          Run scheduled functions, or trigger your remote job endpoint our
-          cloud-based cron job scheduler.
+          A service that allows you to schedule and run recurring tasks and
+          background jobs with ease, using serverless primitives.
         </p>
         <div className="flex justify-center gap-4">
           <Button asChild>
