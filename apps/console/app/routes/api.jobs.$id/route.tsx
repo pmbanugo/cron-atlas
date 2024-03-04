@@ -29,16 +29,24 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
   const userId = await requireUserId(request);
 
-  const db = getDbClient();
-  const job = await db.query.jobs.findFirst({
-    columns: { id: true, jobType: true },
-    where: and(eq(jobs.id, jobId), eq(jobs.userId, userId)),
-  });
+  switch (request.method) {
+    case "DELETE":
+      const db = getDbClient();
+      const job = await db.query.jobs.findFirst({
+        columns: { id: true, jobType: true },
+        where: and(eq(jobs.id, jobId), eq(jobs.userId, userId)),
+      });
 
-  if (job) {
-    await deleteJob({ job, userId });
+      if (job) {
+        await deleteJob({ job, userId });
+      }
+      return json("OK");
+
+    default:
+      return new Response("No handler for this request path and method", {
+        status: 400,
+      });
   }
-  return json("OK");
 }
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
