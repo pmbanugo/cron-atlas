@@ -86,11 +86,11 @@ importers:
         specifier: 1.0.7
         version: 1.0.7(tailwindcss@3.3.6)
       ulidx:
-        specifier: 2.2.1
-        version: 2.2.1
+        specifier: 2.3.0
+        version: 2.3.0
       valibot:
-        specifier: 0.26.0
-        version: 0.26.0
+        specifier: 0.29.0
+        version: 0.29.0
     devDependencies:
       '@remix-run/dev':
         specifier: 2.8.0
@@ -10165,8 +10165,8 @@ packages:
     resolution: {integrity: sha512-o+ORpgGwaYQXgqGDwd+hkS4PuZ3QnmqMMxRuajK/a38L6fTpcE5GPIfrf+L/KemFzfUpeUQc1rRS1iDBozvnFA==}
     dev: true
 
-  /ulidx@2.2.1:
-    resolution: {integrity: sha512-DU9F5t1tihdafuNyW3fIrXUFHHiHxmwuQSGVGIbSpqkc93IH4P0dU8nPhk0gOW7ARxaFu4+P/9cxVwn6PdnIaQ==}
+  /ulidx@2.3.0:
+    resolution: {integrity: sha512-36piWNqcdp9hKlQewyeehCaALy4lyx3FodsCxHuV6i0YdexSkjDOubwxEVr2yi4kh62L/0MgyrxqG4K+qtovnw==}
     engines: {node: '>=16'}
     dependencies:
       layerr: 2.0.1
@@ -10365,8 +10365,8 @@ packages:
       sade: 1.8.1
     dev: true
 
-  /valibot@0.26.0:
-    resolution: {integrity: sha512-cM8VM9jsJGx9P4qarZUBXd0I88OVI4ddtyZ1sAMiofC3Usj7Jxm2c8Xx5accdTrKc3CblO8yyytRaJ6lrsuA+Q==}
+  /valibot@0.29.0:
+    resolution: {integrity: sha512-JhZn08lwZPhAamOCfBwBkv/btQt4KeQhekULPH8crH053zUCLSOGEF2zKExu3bFf245tsj6J1dY0ysd/jUiMIQ==}
     dev: false
 
   /validate-npm-package-license@3.0.4:
