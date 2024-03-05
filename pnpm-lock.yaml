@@ -62,8 +62,8 @@ importers:
         specifier: 0.29.3
         version: 0.29.3(@libsql/client@0.4.0-pre.7)(@types/react@18.2.20)(react@18.2.0)
       fly-admin:
-        specifier: 1.5.0
-        version: 1.5.0
+        specifier: 1.6.0
+        version: 1.6.0
       isbot:
         specifier: 3.6.8
         version: 3.6.8
@@ -6480,6 +6480,14 @@ packages:
 
   /fly-admin@1.5.0:
     resolution: {integrity: sha512-lsyRs+IOSEooNYcNgz7kiVycqZ9nsW8Ro+M+sfW8ubQHXkfgqHKn78kTjuTmu9AMnu1/r9W/B+tgI6CBedeJmg==}
+    dependencies:
+      cross-fetch: 3.1.8
+    transitivePeerDependencies:
+      - encoding
+    dev: false
+
+  /fly-admin@1.6.0:
+    resolution: {integrity: sha512-2IBLK+HBxzoxj/T0JjXag19clS/NFwjeTBwbTb0ARy/GzuooudeN7E9IghvHoqIvfvLsCrxgWwAqS3xMGs4eSg==}
     dependencies:
       cross-fetch: 3.1.8
     transitivePeerDependencies:
