@@ -567,8 +567,8 @@
         "properties": {
           "name": {
             "type": "string",
-            "minLength": 3,
-            "maxLength": 20,
+            "minLength": 2,
+            "maxLength": 100,
             "examples": ["HackerNews weekly"]
           },
           "jobType": {
