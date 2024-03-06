@@ -27,7 +27,7 @@
     "@remix-run/node": "2.8.0",
     "@remix-run/react": "2.8.0",
     "@remix-run/serve": "2.8.0",
-    "@temporalio/client": "1.9.0",
+    "@temporalio/client": "1.9.3",
     "@workos-inc/node": "6.0.1",
     "class-variance-authority": "0.7.0",
     "clsx": "2.1.0",

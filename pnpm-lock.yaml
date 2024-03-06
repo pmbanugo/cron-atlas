@@ -47,8 +47,8 @@ importers:
         specifier: 2.8.0
         version: 2.8.0(typescript@5.3.3)
       '@temporalio/client':
-        specifier: 1.9.0
-        version: 1.9.0
+        specifier: 1.9.3
+        version: 1.9.3
       '@workos-inc/node':
         specifier: 6.0.1
         version: 6.0.1
@@ -212,14 +212,14 @@ importers:
         specifier: workspace:*
         version: link:../../packages/workflow
       '@temporalio/activity':
-        specifier: 1.9.0
-        version: 1.9.0
+        specifier: 1.9.3
+        version: 1.9.3
       '@temporalio/worker':
-        specifier: 1.9.0
-        version: 1.9.0(esbuild@0.19.11)(quill-delta@5.1.0)(tslib@2.6.2)
+        specifier: 1.9.3
+        version: 1.9.3(esbuild@0.19.11)(quill-delta@5.1.0)(tslib@2.6.2)
       '@temporalio/workflow':
-        specifier: 1.9.0
-        version: 1.9.0
+        specifier: 1.9.3
+        version: 1.9.3
       esbuild:
         specifier: 0.19.11
         version: 0.19.11
@@ -243,11 +243,11 @@ importers:
   packages/workflow:
     dependencies:
       '@temporalio/activity':
-        specifier: ^1.9.0
-        version: 1.9.0
+        specifier: ^1.9.3
+        version: 1.9.3
       '@temporalio/workflow':
-        specifier: ^1.9.0
-        version: 1.9.0
+        specifier: ^1.9.3
+        version: 1.9.3
       fly-admin:
         specifier: 1.5.0
         version: 1.5.0
@@ -3150,31 +3150,12 @@ packages:
     resolution: {integrity: sha512-UY+FGM/2jjMkzQLn8pxcHGMaVLh9aEitG3zY2CiY7XHdLiz3bZOwa6oDxNqEMv7zZkV+cj5DOdz0cQ1BP5Hjgw==}
     dev: true
 
-  /@swc/core-darwin-arm64@1.3.102:
-    resolution: {integrity: sha512-CJDxA5Wd2cUMULj3bjx4GEoiYyyiyL8oIOu4Nhrs9X+tlg8DnkCm4nI57RJGP8Mf6BaXPIJkHX8yjcefK2RlDA==}
-    engines: {node: '>=10'}
-    cpu: [arm64]
-    os: [darwin]
-    requiresBuild: true
-    dev: false
-    optional: true
-
   /@swc/core-darwin-arm64@1.4.2:
     resolution: {integrity: sha512-1uSdAn1MRK5C1m/TvLZ2RDvr0zLvochgrZ2xL+lRzugLlCTlSA+Q4TWtrZaOz+vnnFVliCpw7c7qu0JouhgQIw==}
     engines: {node: '>=10'}
     cpu: [arm64]
     os: [darwin]
     requiresBuild: true
-    dev: true
-    optional: true
-
-  /@swc/core-darwin-x64@1.3.102:
-    resolution: {integrity: sha512-X5akDkHwk6oAer49oER0qZMjNMkLH3IOZaV1m98uXIasAGyjo5WH1MKPeMLY1sY6V6TrufzwiSwD4ds571ytcg==}
-    engines: {node: '>=10'}
-    cpu: [x64]
-    os: [darwin]
-    requiresBuild: true
-    dev: false
     optional: true
 
   /@swc/core-darwin-x64@1.4.2:
@@ -3183,16 +3164,6 @@ packages:
     cpu: [x64]
     os: [darwin]
     requiresBuild: true
-    dev: true
-    optional: true
-
-  /@swc/core-linux-arm-gnueabihf@1.3.102:
-    resolution: {integrity: sha512-kJH3XtZP9YQdjq/wYVBeFuiVQl4HaC4WwRrIxAHwe2OyvrwUI43dpW3LpxSggBnxXcVCXYWf36sTnv8S75o2Gw==}
-    engines: {node: '>=10'}
-    cpu: [arm]
-    os: [linux]
-    requiresBuild: true
-    dev: false
     optional: true
 
   /@swc/core-linux-arm-gnueabihf@1.4.2:
@@ -3201,16 +3172,6 @@ packages:
     cpu: [arm]
     os: [linux]
     requiresBuild: true
-    dev: true
-    optional: true
-
-  /@swc/core-linux-arm64-gnu@1.3.102:
-    resolution: {integrity: sha512-flQP2WDyCgO24WmKA1wjjTx+xfCmavUete2Kp6yrM+631IHLGnr17eu7rYJ/d4EnDBId/ytMyrnWbTVkaVrpbQ==}
-    engines: {node: '>=10'}
-    cpu: [arm64]
-    os: [linux]
-    requiresBuild: true
-    dev: false
     optional: true
 
   /@swc/core-linux-arm64-gnu@1.4.2:
@@ -3219,16 +3180,6 @@ packages:
     cpu: [arm64]
     os: [linux]
     requiresBuild: true
-    dev: true
-    optional: true
-
-  /@swc/core-linux-arm64-musl@1.3.102:
-    resolution: {integrity: sha512-bQEQSnC44DyoIGLw1+fNXKVGoCHi7eJOHr8BdH0y1ooy9ArskMjwobBFae3GX4T1AfnrTaejyr0FvLYIb0Zkog==}
-    engines: {node: '>=10'}
-    cpu: [arm64]
-    os: [linux]
-    requiresBuild: true
-    dev: false
     optional: true
 
   /@swc/core-linux-arm64-musl@1.4.2:
@@ -3237,16 +3188,6 @@ packages:
     cpu: [arm64]
     os: [linux]
     requiresBuild: true
-    dev: true
-    optional: true
-
-  /@swc/core-linux-x64-gnu@1.3.102:
-    resolution: {integrity: sha512-dFvnhpI478svQSxqISMt00MKTDS0e4YtIr+ioZDG/uJ/q+RpcNy3QI2KMm05Fsc8Y0d4krVtvCKWgfUMsJZXAg==}
-    engines: {node: '>=10'}
-    cpu: [x64]
-    os: [linux]
-    requiresBuild: true
-    dev: false
     optional: true
 
   /@swc/core-linux-x64-gnu@1.4.2:
@@ -3255,16 +3196,6 @@ packages:
     cpu: [x64]
     os: [linux]
     requiresBuild: true
-    dev: true
-    optional: true
-
-  /@swc/core-linux-x64-musl@1.3.102:
-    resolution: {integrity: sha512-+a0M3CvjeIRNA/jTCzWEDh2V+mhKGvLreHOL7J97oULZy5yg4gf7h8lQX9J8t9QLbf6fsk+0F8bVH1Ie/PbXjA==}
-    engines: {node: '>=10'}
-    cpu: [x64]
-    os: [linux]
-    requiresBuild: true
-    dev: false
     optional: true
 
   /@swc/core-linux-x64-musl@1.4.2:
@@ -3273,16 +3204,6 @@ packages:
     cpu: [x64]
     os: [linux]
     requiresBuild: true
-    dev: true
-    optional: true
-
-  /@swc/core-win32-arm64-msvc@1.3.102:
-    resolution: {integrity: sha512-w76JWLjkZNOfkB25nqdWUNCbt0zJ41CnWrJPZ+LxEai3zAnb2YtgB/cCIrwxDebRuMgE9EJXRj7gDDaTEAMOOQ==}
-    engines: {node: '>=10'}
-    cpu: [arm64]
-    os: [win32]
-    requiresBuild: true
-    dev: false
     optional: true
 
   /@swc/core-win32-arm64-msvc@1.4.2:
@@ -3291,16 +3212,6 @@ packages:
     cpu: [arm64]
     os: [win32]
     requiresBuild: true
-    dev: true
-    optional: true
-
-  /@swc/core-win32-ia32-msvc@1.3.102:
-    resolution: {integrity: sha512-vlDb09HiGqKwz+2cxDS9T5/461ipUQBplvuhW+cCbzzGuPq8lll2xeyZU0N1E4Sz3MVdSPx1tJREuRvlQjrwNg==}
-    engines: {node: '>=10'}
-    cpu: [ia32]
-    os: [win32]
-    requiresBuild: true
-    dev: false
     optional: true
 
   /@swc/core-win32-ia32-msvc@1.4.2:
@@ -3309,16 +3220,6 @@ packages:
     cpu: [ia32]
     os: [win32]
     requiresBuild: true
-    dev: true
-    optional: true
-
-  /@swc/core-win32-x64-msvc@1.3.102:
-    resolution: {integrity: sha512-E/jfSD7sShllxBwwgDPeXp1UxvIqehj/ShSUqq1pjR/IDRXngcRSXKJK92mJkNFY7suH6BcCWwzrxZgkO7sWmw==}
-    engines: {node: '>=10'}
-    cpu: [x64]
-    os: [win32]
-    requiresBuild: true
-    dev: false
     optional: true
 
   /@swc/core-win32-x64-msvc@1.4.2:
@@ -3327,33 +3228,7 @@ packages:
     cpu: [x64]
     os: [win32]
     requiresBuild: true
-    dev: true
     optional: true
-
-  /@swc/core@1.3.102:
-    resolution: {integrity: sha512-OAjNLY/f6QWKSDzaM3bk31A+OYHu6cPa9P/rFIx8X5d24tHXUpRiiq6/PYI6SQRjUPlB72GjsjoEU8F+ALadHg==}
-    engines: {node: '>=10'}
-    requiresBuild: true
-    peerDependencies:
-      '@swc/helpers': ^0.5.0
-    peerDependenciesMeta:
-      '@swc/helpers':
-        optional: true
-    dependencies:
-      '@swc/counter': 0.1.2
-      '@swc/types': 0.1.5
-    optionalDependencies:
-      '@swc/core-darwin-arm64': 1.3.102
-      '@swc/core-darwin-x64': 1.3.102
-      '@swc/core-linux-arm-gnueabihf': 1.3.102
-      '@swc/core-linux-arm64-gnu': 1.3.102
-      '@swc/core-linux-arm64-musl': 1.3.102
-      '@swc/core-linux-x64-gnu': 1.3.102
-      '@swc/core-linux-x64-musl': 1.3.102
-      '@swc/core-win32-arm64-msvc': 1.3.102
-      '@swc/core-win32-ia32-msvc': 1.3.102
-      '@swc/core-win32-x64-msvc': 1.3.102
-    dev: false
 
   /@swc/core@1.4.2:
     resolution: {integrity: sha512-vWgY07R/eqj1/a0vsRKLI9o9klGZfpLNOVEnrv4nrccxBgYPjcf22IWwAoaBJ+wpA7Q4fVjCUM8lP0m01dpxcg==}
@@ -3378,7 +3253,6 @@ packages:
       '@swc/core-win32-arm64-msvc': 1.4.2
       '@swc/core-win32-ia32-msvc': 1.4.2
       '@swc/core-win32-x64-msvc': 1.4.2
-    dev: true
 
   /@swc/counter@0.1.2:
     resolution: {integrity: sha512-9F4ys4C74eSTEUNndnER3VJ15oru2NumfQxS8geE+f3eB5xvfxpWyqE5XlVnxb/R14uoXi6SLbBwwiDSkv+XEw==}
@@ -3386,70 +3260,70 @@ packages:
   /@swc/types@0.1.5:
     resolution: {integrity: sha512-myfUej5naTBWnqOCc/MdVOLVjXUXtIA+NpDrDBKJtLLg2shUjBu3cZmB/85RyitKc55+lUUyl7oRfLOvkr2hsw==}
 
-  /@temporalio/activity@1.9.0:
-    resolution: {integrity: sha512-a9bLEUAM/Y8oInFvmjQPOHnTobp4dX6u7Y61Q0eFtuGQsVb4G51UtXAUtxhgn9lZJv37Tjw+K6yvXYjt4vsSXg==}
+  /@temporalio/activity@1.9.3:
+    resolution: {integrity: sha512-QmY2dCNNSANhCgy4HCaeRmosyg73wI7KFbxTpnCrFjAWjxpJqBYC5qROrWHQEG/52Mcf59MtmznWSqz3M04Naw==}
     dependencies:
-      '@temporalio/common': 1.9.0
+      '@temporalio/common': 1.9.3
       abort-controller: 3.0.0
     dev: false
 
-  /@temporalio/client@1.9.0:
-    resolution: {integrity: sha512-8J2ZJe4xaWpq648657oUfNW/moNqgRL3ARq2oxRWH+g0qBOYKvUhGI7xTJSbuA2+s7sSbRyOX7WBnkT5r9ce5A==}
+  /@temporalio/client@1.9.3:
+    resolution: {integrity: sha512-RgcqMqgrzQG3jOrCxnh8mYqwDqngAMKoCUOPwZZU5AAJa0sBcBLV2lEhJ9KGEavpfZej/duplUa67EV0s+M/6w==}
     dependencies:
       '@grpc/grpc-js': 1.7.3
-      '@temporalio/common': 1.9.0
-      '@temporalio/proto': 1.9.0
+      '@temporalio/common': 1.9.3
+      '@temporalio/proto': 1.9.3
       abort-controller: 3.0.0
       long: 5.2.3
       uuid: 9.0.1
     dev: false
 
-  /@temporalio/common@1.9.0:
-    resolution: {integrity: sha512-x7Rmarsy5uOT91lla0p777CFc+uNX62Vgb0FHOcR2X7o1rFl1BPKY9A1Ew7nt28Po59aNbCbdhLykksq4e3yng==}
+  /@temporalio/common@1.9.3:
+    resolution: {integrity: sha512-o6aAiqyIyu8b1bUOeY4nu04ZMwLAPR66Vtc8W/xYs7WM874wNhZlm8XWspqnmflI3W7td4y3Y50AHRi/BUNxRg==}
     dependencies:
-      '@temporalio/proto': 1.9.0
+      '@temporalio/proto': 1.9.3
       long: 5.2.3
       ms: 3.0.0-canary.1
       proto3-json-serializer: 2.0.0
     dev: false
 
-  /@temporalio/core-bridge@1.9.0:
-    resolution: {integrity: sha512-QFsYgKOvp2aGjanEMonY4zp/4MaCbFh8cOuGkFf2yFoANqbeMAUC7zwczaK9XN7m+LhyaQCZOYHgnZePPJIp3g==}
+  /@temporalio/core-bridge@1.9.3:
+    resolution: {integrity: sha512-0cYVDzypc+ilpWeBsYkHP8wv/SbtcLZA4z4ZZd2c6OWKEM3+p4UuW8AiXZf/avL+rpo7cjrSRl+PTWe52vPReg==}
     requiresBuild: true
     dependencies:
-      '@temporalio/common': 1.9.0
+      '@temporalio/common': 1.9.3
       arg: 5.0.2
       cargo-cp-artifact: 0.1.8
       which: 4.0.0
     dev: false
 
-  /@temporalio/proto@1.9.0:
-    resolution: {integrity: sha512-jfSo/NSEjBXvCwl55A+e7zuJ90ZbAcvU16+4/bLCL6H/8JTDvafVimPcvYi6UQwJZcQMUsKegu8q36HWw/jfgQ==}
+  /@temporalio/proto@1.9.3:
+    resolution: {integrity: sha512-YOeelTGdz8zLX8LUlXlERvd/VTaCPmV9xN/JEUQoxsyc7YpOB2wVwdrXS7Al/2b1jOTYRm00vbn3rljRV9W5dA==}
     dependencies:
       long: 5.2.3
       protobufjs: 7.2.5
     dev: false
 
-  /@temporalio/worker@1.9.0(esbuild@0.19.11)(quill-delta@5.1.0)(tslib@2.6.2):
-    resolution: {integrity: sha512-ekrmJ/rpM+ErBe7jCBZ1FSf0iAThlMgZ5ez/B02Coy+L7HPVG3MH2hiYi1t6SPcl8zviZbb7vIGTaV0SnWwQYg==}
+  /@temporalio/worker@1.9.3(esbuild@0.19.11)(quill-delta@5.1.0)(tslib@2.6.2):
+    resolution: {integrity: sha512-RFotNUeWNnLDk4EvnPVZBiYAZWc+daezr/Prn/iMsCI6e3CxbchDha6GiqIVkIF3ppq1R2Vl+FpouNA/gBniGg==}
     engines: {node: '>= 14.18.0'}
     dependencies:
-      '@swc/core': 1.3.102
-      '@temporalio/activity': 1.9.0
-      '@temporalio/client': 1.9.0
-      '@temporalio/common': 1.9.0
-      '@temporalio/core-bridge': 1.9.0
-      '@temporalio/proto': 1.9.0
-      '@temporalio/workflow': 1.9.0
+      '@swc/core': 1.4.2
+      '@temporalio/activity': 1.9.3
+      '@temporalio/client': 1.9.3
+      '@temporalio/common': 1.9.3
+      '@temporalio/core-bridge': 1.9.3
+      '@temporalio/proto': 1.9.3
+      '@temporalio/workflow': 1.9.3
       abort-controller: 3.0.0
       heap-js: 2.3.0
       memfs: 4.6.0(quill-delta@5.1.0)(rxjs@7.8.1)(tslib@2.6.2)
       rxjs: 7.8.1
       source-map: 0.7.4
       source-map-loader: 4.0.2(webpack@5.89.0)
-      swc-loader: 0.2.3(@swc/core@1.3.102)(webpack@5.89.0)
+      swc-loader: 0.2.3(@swc/core@1.4.2)(webpack@5.89.0)
       unionfs: 4.5.1
-      webpack: 5.89.0(@swc/core@1.3.102)(esbuild@0.19.11)
+      webpack: 5.89.0(@swc/core@1.4.2)(esbuild@0.19.11)
     transitivePeerDependencies:
       - '@swc/helpers'
       - esbuild
@@ -3459,11 +3333,11 @@ packages:
       - webpack-cli
     dev: false
 
-  /@temporalio/workflow@1.9.0:
-    resolution: {integrity: sha512-0/9b8bUbtVdvuV9t7BQ7Ki/SVi9y2HnymO70SaT05x2t2aXS8BuW7q73vwIPoKazFdvNK7LA1nNcZ3Kgz9iz8w==}
+  /@temporalio/workflow@1.9.3:
+    resolution: {integrity: sha512-JU3SKZf+Cdm9ebNIbhLB3DM3NmGyusOCCZ1eSOWCHPAJo+fW9Zi6B2ba+Td7XRu6EGWJwvBwh6fnqzVCxtBPMA==}
     dependencies:
-      '@temporalio/common': 1.9.0
-      '@temporalio/proto': 1.9.0
+      '@temporalio/common': 1.9.3
+      '@temporalio/proto': 1.9.3
     dev: false
 
   /@testing-library/dom@8.20.1:
@@ -9532,7 +9406,7 @@ packages:
     dependencies:
       iconv-lite: 0.6.3
       source-map-js: 1.0.2
-      webpack: 5.89.0(@swc/core@1.3.102)(esbuild@0.19.11)
+      webpack: 5.89.0(@swc/core@1.4.2)(esbuild@0.19.11)
     dev: false
 
   /source-map-support@0.5.21:
@@ -9787,14 +9661,14 @@ packages:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
 
-  /swc-loader@0.2.3(@swc/core@1.3.102)(webpack@5.89.0):
+  /swc-loader@0.2.3(@swc/core@1.4.2)(webpack@5.89.0):
     resolution: {integrity: sha512-D1p6XXURfSPleZZA/Lipb3A8pZ17fP4NObZvFCDjK/OKljroqDpPmsBdTraWhVBqUNpcWBQY1imWdoPScRlQ7A==}
     peerDependencies:
       '@swc/core': ^1.2.147
       webpack: '>=2'
     dependencies:
-      '@swc/core': 1.3.102
-      webpack: 5.89.0(@swc/core@1.3.102)(esbuild@0.19.11)
+      '@swc/core': 1.4.2
+      webpack: 5.89.0(@swc/core@1.4.2)(esbuild@0.19.11)
     dev: false
 
   /tailwind-merge@2.1.0:
@@ -9921,7 +9795,7 @@ packages:
       yallist: 4.0.0
     dev: true
 
-  /terser-webpack-plugin@5.3.9(@swc/core@1.3.102)(esbuild@0.19.11)(webpack@5.89.0):
+  /terser-webpack-plugin@5.3.9(@swc/core@1.4.2)(esbuild@0.19.11)(webpack@5.89.0):
     resolution: {integrity: sha512-ZuXsqE07EcggTWQjXUj+Aot/OMcD0bMKGgF63f7UxYcu5/AJF53aIpK1YoP5xR9l6s/Hy2b+t1AM0bLNPRuhwA==}
     engines: {node: '>= 10.13.0'}
     peerDependencies:
@@ -9938,13 +9812,13 @@ packages:
         optional: true
     dependencies:
       '@jridgewell/trace-mapping': 0.3.20
-      '@swc/core': 1.3.102
+      '@swc/core': 1.4.2
       esbuild: 0.19.11
       jest-worker: 27.5.1
       schema-utils: 3.3.0
       serialize-javascript: 6.0.1
       terser: 5.26.0
-      webpack: 5.89.0(@swc/core@1.3.102)(esbuild@0.19.11)
+      webpack: 5.89.0(@swc/core@1.4.2)(esbuild@0.19.11)
     dev: false
 
   /terser@5.26.0:
@@ -10532,7 +10406,7 @@ packages:
     engines: {node: '>=10.13.0'}
     dev: false
 
-  /webpack@5.89.0(@swc/core@1.3.102)(esbuild@0.19.11):
+  /webpack@5.89.0(@swc/core@1.4.2)(esbuild@0.19.11):
     resolution: {integrity: sha512-qyfIC10pOr70V+jkmud8tMfajraGCZMBWJtrmuBymQKCrLTRejBI8STDp1MCyZu/QTdZSeacCQYpYNQVOzX5kw==}
     engines: {node: '>=10.13.0'}
     hasBin: true
@@ -10563,7 +10437,7 @@ packages:
       neo-async: 2.6.2
       schema-utils: 3.3.0
       tapable: 2.2.1
-      terser-webpack-plugin: 5.3.9(@swc/core@1.3.102)(esbuild@0.19.11)(webpack@5.89.0)
+      terser-webpack-plugin: 5.3.9(@swc/core@1.4.2)(esbuild@0.19.11)(webpack@5.89.0)
       watchpack: 2.4.0
       webpack-sources: 3.2.3
     transitivePeerDependencies:
