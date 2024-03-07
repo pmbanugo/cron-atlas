@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
+  "sideEffects": false,
   "exports": {
     ".": {
       "import": "./dist/index.js",
