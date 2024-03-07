@@ -1,6 +1,7 @@
-import { and, eq } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import { getDbClient } from "./db";
 import { apiTokens, jobs } from "./schema";
+import type { ScheduleType } from "./types";
 
 export async function getJobs({ userId }: { userId: string }) {
   const db = getDbClient();
@@ -47,4 +48,35 @@ export async function getApiToken(hashedToken: string) {
     },
   });
   return apiToken;
+}
+
+export async function updateJob({
+  jobId,
+  userId,
+  data: { name, schedule, scheduleType },
+}: {
+  userId: string;
+  jobId: string;
+  data: { name: string; scheduleType: ScheduleType; schedule: string };
+}) {
+  const db = getDbClient();
+  return await db
+    .update(jobs)
+    .set({
+      name,
+      schedule: {
+        type: scheduleType,
+        value: schedule,
+      },
+      updatedAt: sql`(strftime('%s', 'now'))`,
+    })
+    .where(and(eq(jobs.id, jobId), eq(jobs.userId, userId)))
+    .returning({
+      id: jobs.id,
+      name: jobs.name,
+      jobType: jobs.jobType,
+      schedule: jobs.schedule,
+      functionConfig: jobs.functionConfig,
+      endpoint: jobs.endpoint,
+    });
 }

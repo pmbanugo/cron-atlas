@@ -2,10 +2,19 @@ import { json } from "@remix-run/node";
 import { getDbClient } from "~/data/db";
 import { jobs } from "~/data/schema";
 import { and, eq } from "drizzle-orm";
-import { deleteSchedule } from "~/cron/delete-schedule";
+import { deleteSchedule } from "~/cron.server/delete-schedule";
 import { getEnv, getFlyAppName } from "~/lib/utils";
 import { createClient } from "fly-admin";
 import type { JobType } from "~/data/types";
+import {
+  updateApiSchedule,
+  updateFunctionSchedule,
+} from "~/cron.server/update-schedule";
+import { is } from "valibot";
+import { BaseJobInputSchema, UrlJobInputSchema } from "./schema";
+import { updateJob as updateDbJob } from "~/data/respository.server";
+
+// Refactoring: Most (if not all) of these functions are also used in the route handler for the webforms. Perhaps a more generic folder could hold this file. For now, I'll leave it here.
 
 export async function deleteJob({
   job,
@@ -69,5 +78,71 @@ export async function deleteJob({
     }
     default:
       break;
+  }
+}
+
+export async function updateJob({
+  jobId,
+  userId,
+  formData,
+}: {
+  jobId: string;
+  userId: string;
+  formData: FormData;
+}) {
+  const data = Object.fromEntries(formData);
+  let updatedJob: Awaited<ReturnType<typeof updateDbJob>>;
+
+  switch (true) {
+    case is(UrlJobInputSchema, data):
+      updatedJob = await updateDbJob({
+        jobId,
+        userId,
+        data: {
+          name: data.name,
+          scheduleType: data.scheduleType,
+          schedule: data.schedule,
+        },
+      });
+      if (updatedJob.length > 0) {
+        await updateApiSchedule({
+          jobId: jobId,
+          schedule: {
+            scheduleType: data.scheduleType,
+            value: data.schedule,
+          },
+        });
+
+        return updatedJob[0];
+      }
+      break;
+
+    case is(BaseJobInputSchema, data):
+      updatedJob = await updateDbJob({
+        jobId,
+        userId,
+        data: {
+          name: data.name,
+          scheduleType: data.scheduleType,
+          schedule: data.schedule,
+        },
+      });
+      if (updatedJob.length > 0) {
+        await updateFunctionSchedule({
+          jobId,
+          schedule: {
+            scheduleType: data.scheduleType,
+            value: data.schedule,
+          },
+        });
+
+        return updatedJob[0];
+      }
+      break;
+
+    default:
+      throw new Response("Invalid request payload or 'jobType'", {
+        status: 400,
+      });
   }
 }

@@ -6,10 +6,11 @@ import {
 import { getDbClient } from "~/data/db";
 import { jobs } from "~/data/schema";
 import type { CronJobFormData } from "~/components/job-form";
-import { CronJobForm, jobTypes, scheduleTypes } from "~/components/job-form";
+import { CronJobForm } from "~/components/job-form";
 import { getSessionManager } from "~/lib/session.server";
 import { eq, sql } from "drizzle-orm";
 import { saveJob } from "./logic.server";
+import { JOB_TYPES, SCHEDULE_TYPES } from "~/data/types";
 
 export const meta: MetaFunction = () => {
   return [
@@ -30,9 +31,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     !name ||
     !schedule ||
     !scheduleType ||
-    !Object.keys(scheduleTypes).includes(scheduleType) ||
+    !SCHEDULE_TYPES.includes(scheduleType) ||
     !jobType ||
-    !Object.keys(jobTypes).includes(jobType)
+    !JOB_TYPES.includes(jobType)
   ) {
     return {
       errors: {

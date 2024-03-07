@@ -5,7 +5,7 @@ import { Badge } from "~/components/ui/badge";
 import { getDbClient } from "~/data/db";
 import { jobs } from "~/data/schema";
 import { and, eq } from "drizzle-orm";
-import { getRecent } from "~/cron/schedule-info";
+import { getRecent } from "~/cron.server/schedule-info";
 import { getSessionManager } from "~/lib/session.server";
 import { Gauge } from "lucide-react";
 import { useLoaderData } from "@remix-run/react";

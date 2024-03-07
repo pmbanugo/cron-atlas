@@ -1,5 +1,5 @@
 import { ulid } from "ulidx";
-import { runtimes, type CronJobFormData } from "~/components/job-form";
+import type { CronJobFormData } from "~/components/job-form";
 import { getEnv, getFlyAppName, raiseError } from "~/lib/utils";
 import { createClient } from "fly-admin";
 import { json } from "@remix-run/node";
@@ -9,8 +9,9 @@ import type { ScheduleType } from "~/data/types";
 import {
   startApiSchedule,
   startScheduledFunction,
-} from "~/cron/start-schedule";
-import { deleteSchedule } from "~/cron/delete-schedule";
+} from "~/cron.server/start-schedule";
+import { deleteSchedule } from "~/cron.server/delete-schedule";
+import { FUNCTION_RUNTIME_OPTIONS } from "@cron-atlas/workflow";
 
 type Secret = {
   key: string;
@@ -69,7 +70,7 @@ Required<Omit<CronJobFormData, "file" | "runtime" | "url">> &
       break;
     }
     case "function": {
-      if (!runtime || !Object.keys(runtimes).includes(runtime)) {
+      if (!runtime || !FUNCTION_RUNTIME_OPTIONS.includes(runtime)) {
         throw new Error("Invalid runtime value");
       }
       if (!file || file.type !== "text/javascript" || file.size === 0) {

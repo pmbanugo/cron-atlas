@@ -7,23 +7,15 @@ import type {
 import { useLoaderData } from "@remix-run/react";
 import { getDbClient } from "~/data/db";
 import { jobs } from "~/data/schema";
-import type { ScheduleType } from "~/data/types";
-import { and, eq, sql } from "drizzle-orm";
+import { JOB_TYPES, SCHEDULE_TYPES } from "~/data/types";
+import { and, eq } from "drizzle-orm";
 import type { CronJobFormData } from "~/components/job-form";
-import {
-  CronJobForm,
-  formTypes,
-  jobTypes,
-  runtimes,
-  scheduleTypes,
-} from "~/components/job-form";
-import {
-  updateApiSchedule,
-  updateFunctionSchedule,
-  updateScheduledFunctionArgs,
-} from "~/cron/update-schedule";
+import { CronJobForm, formTypes } from "~/components/job-form";
+import { updateScheduledFunctionArgs } from "~/cron.server/update-schedule";
 import { getSessionManager } from "~/lib/session.server";
 import { getEnv, getFlyAppName } from "~/lib/utils";
+import { FUNCTION_RUNTIME_OPTIONS } from "@cron-atlas/workflow";
+import { updateJob } from "./api.jobs.$id/logic.server";
 
 export const meta: MetaFunction = () => {
   return [
@@ -39,29 +31,32 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
     return redirect("/404");
   }
 
+  const db = getDbClient();
+  const existingJob = await db.query.jobs.findFirst({
+    where: and(eq(jobs.id, jobId), eq(jobs.userId, userId)),
+    columns: {
+      id: true,
+    },
+  });
+  if (!existingJob) {
+    return redirect("/404");
+  }
+
   const formData = await request.formData();
   const formType = formData.get("formType");
   const { name, schedule, scheduleType, jobType, runtime, file } =
     Object.fromEntries(formData) as CronJobFormData;
 
   if (formType && formType === formTypes.functionUpload) {
-    if (!runtime || !Object.keys(runtimes).includes(runtime)) {
+    if (!runtime || !FUNCTION_RUNTIME_OPTIONS.includes(runtime)) {
       throw new Error("Invalid runtime value");
     }
 
     if (!file || file.type !== "text/javascript" || file.size === 0) {
       return { errors: { file: "File must be a JS file." } };
     }
-
-    const db = getDbClient();
-    const existingJob = await db.query.jobs.findFirst({
-      where: and(eq(jobs.id, jobId), eq(jobs.userId, userId)),
-      columns: {
-        id: true,
-      },
-    });
-    if (!existingJob) {
-      return redirect("/404");
+    if (file.size > 1024 * 1024 * 2) {
+      return { errors: { file: "File must be less than 2 MB." } };
     }
 
     const functionStoreUrl = getEnv("FUNCTION_STORE_DOMAIN");
@@ -93,13 +88,14 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       flyAppName: getFlyAppName(jobId),
     });
   } else {
+    //TODO: since I use Valibot schema validation in the updateJob() function, how do I get better error messages and return validation errors to the user? This code was pre-valibot inclusion to the app.
     if (
       !name ||
       !schedule ||
       !scheduleType ||
-      !Object.keys(scheduleTypes).includes(scheduleType) ||
+      !SCHEDULE_TYPES.includes(scheduleType) ||
       !jobType ||
-      !Object.keys(jobTypes).includes(jobType)
+      !JOB_TYPES.includes(jobType)
     ) {
       return {
         errors: {
@@ -107,58 +103,11 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
         },
       };
     }
-
-    if (name.length > 100) {
-      return { errors: { name: "Name must be less than 100 characters" } };
+    if (name.length > 100 || name.length < 2) {
+      return { errors: { name: "Name must be between 2 to 100 characters" } };
     }
 
-    const db = getDbClient();
-    const existingJob = await db.query.jobs.findFirst({
-      where: and(eq(jobs.id, jobId), eq(jobs.userId, userId)),
-      columns: {
-        id: true,
-      },
-    });
-    if (!existingJob) {
-      return redirect("/404");
-    }
-
-    await db
-      .update(jobs)
-      .set({
-        name,
-        schedule: {
-          type: scheduleType as ScheduleType,
-          value: schedule,
-        },
-        updatedAt: sql`(strftime('%s', 'now'))`,
-      })
-      .where(eq(jobs.id, jobId));
-
-    switch (jobType) {
-      case "url": {
-        await updateApiSchedule({
-          jobId: jobId,
-          schedule: {
-            scheduleType: scheduleType as ScheduleType,
-            value: schedule,
-          },
-        });
-        break;
-      }
-      case "function": {
-        await updateFunctionSchedule({
-          jobId,
-          schedule: {
-            scheduleType: scheduleType as ScheduleType,
-            value: schedule,
-          },
-        });
-        break;
-      }
-      default:
-        throw new Error(`Invalid job type: ${jobType}`);
-    }
+    await updateJob({ jobId, userId, formData });
   }
 
   return redirect("/");

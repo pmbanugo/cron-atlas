@@ -2,12 +2,12 @@ import type { FunctionRuntime } from "@cron-atlas/workflow";
 import { json } from "@remix-run/node";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { and, eq } from "drizzle-orm";
-import { getDescription } from "~/cron/schedule-info";
+import { getDescription } from "~/cron.server/schedule-info";
 import { getDbClient } from "~/data/db";
 import { getJob } from "~/data/respository.server";
 import { jobs, type Job } from "~/data/schema";
 import { requireUserId } from "~/lib/api.server";
-import { deleteJob } from "./logic.server";
+import { deleteJob, updateJob } from "./logic.server";
 
 type BaseJobDTO = Pick<Job, "id" | "name" | "schedule" | "jobType"> & {
   paused: boolean;
@@ -29,18 +29,38 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
   const userId = await requireUserId(request);
 
+  const db = getDbClient();
+  const job = await db.query.jobs.findFirst({
+    columns: { id: true, jobType: true },
+    where: and(eq(jobs.id, jobId), eq(jobs.userId, userId)),
+  });
+  if (!job) {
+    return new Response("Job not found", { status: 404 });
+  }
+
   switch (request.method) {
     case "DELETE":
-      const db = getDbClient();
-      const job = await db.query.jobs.findFirst({
-        columns: { id: true, jobType: true },
-        where: and(eq(jobs.id, jobId), eq(jobs.userId, userId)),
-      });
+      await deleteJob({ job, userId });
+      return json("OK");
+    case "PUT": {
+      const formData = await request.formData();
+      const job = await updateJob({ jobId, userId, formData });
 
       if (job) {
-        await deleteJob({ job, userId });
+        const url = job.endpoint.url;
+        return json({
+          id: job.id,
+          name: job.name,
+          jobType: job.jobType,
+          schedule: job.schedule,
+          runtime: job?.functionConfig?.runtime,
+          secrets: job?.functionConfig?.secrets,
+          endpoint: url ? { url: url } : undefined,
+        });
       }
-      return json("OK");
+
+      return new Response("Couldn't update job", { status: 500 });
+    }
 
     default:
       return new Response("No handler for this request path and method", {

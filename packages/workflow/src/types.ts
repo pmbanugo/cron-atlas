@@ -1,3 +1,5 @@
+import type { FUNCTION_RUNTIME_OPTIONS } from "./constant";
+
 export type RemoteJobResult = {
   success: boolean;
   timeout: boolean;
@@ -9,8 +11,4 @@ export type ScheduledFunctionResult = {
   error?: { message: string; stack?: string };
 };
 
-export type FunctionRuntime =
-  | "nodejs-alpine"
-  | "nodejs-debian"
-  | "bun-alpine"
-  | "bun-debian";
+export type FunctionRuntime = (typeof FUNCTION_RUNTIME_OPTIONS)[number];

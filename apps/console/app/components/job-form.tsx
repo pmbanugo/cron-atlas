@@ -22,13 +22,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { MinusCircle, PlusCircle } from "lucide-react";
 import type { FunctionRuntime } from "@cron-atlas/workflow";
 
-export const scheduleTypes = {
+const scheduleTypes = {
   interval: "Interval",
   cron: "Cron Expression",
   once: "Once",
 } as const satisfies Record<ScheduleType, string>;
 
-export const jobTypes = {
+const jobTypes = {
   url: "URL",
   function: "Scheduled Function",
 } as const satisfies Record<JobType, string>;
@@ -37,7 +37,7 @@ export const formTypes = {
   functionUpload: "function-upload",
 } as const;
 
-export const runtimes = {
+const runtimes = {
   "nodejs-alpine": "Node.js Alpine",
   "nodejs-debian": "Node.js Debian",
   "bun-alpine": "Bun Alpine",
@@ -50,7 +50,7 @@ export type CronJobFormData = {
   name?: string;
   url?: string;
   schedule?: string;
-  scheduleType?: string;
+  scheduleType?: ScheduleType;
   jobType?: JobType;
   runtime?: FunctionRuntime;
   file?: File;
@@ -249,7 +249,7 @@ export function CronJobForm({
                       name="url"
                       type="url"
                       defaultValue={job?.endpoint?.url}
-                      disabled={!!job}
+                      readOnly={!!job}
                       required
                     />
                   </div>

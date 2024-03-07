@@ -1,9 +1,7 @@
-export const SCHEDULE_TYPES = {
-  interval: "interval",
-  cron: "cron",
-  once: "once",
-} as const;
+export const SCHEDULE_TYPES = ["interval", "cron", "once"] as const;
 
-export type ScheduleType = keyof typeof SCHEDULE_TYPES;
+export type ScheduleType = (typeof SCHEDULE_TYPES)[number];
 
-export type JobType = "url" | "function";
+export const JOB_TYPES = ["url", "function"] as const;
+
+export type JobType = (typeof JOB_TYPES)[number];

@@ -1,6 +1,7 @@
 import { ApplicationFailure } from "@temporalio/activity";
 import type { FunctionRuntime } from "./types";
 
+//TODO: move to constants.ts and rename variable
 export const constants = {
   QUEUE: process.env.TEMPORAL_QUEUE || "cron-jobs",
   NAMESPACE: process.env.TEMPORAL_NAMESPACE || "default",

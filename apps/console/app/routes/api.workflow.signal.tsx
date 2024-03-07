@@ -1,7 +1,7 @@
 import { createHmac } from "node:crypto";
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { object, string, optional, parse, ValiError } from "valibot";
-import { signalJobFinished } from "~/cron/signal";
+import { signalJobFinished } from "~/cron.server/signal";
 import { getEnv } from "~/lib/utils";
 
 const SignalSchema = object({
