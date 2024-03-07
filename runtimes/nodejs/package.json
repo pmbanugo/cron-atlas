@@ -23,7 +23,7 @@
     "@types/node": "20.11.5",
     "eslint": "8.56.0",
     "tsimp": "2.0.10",
-    "typescript": "5.3.3"
+    "typescript": "5.4.2"
   },
   "keywords": [],
   "author": "Peter Mbanugo"
