@@ -43,9 +43,10 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   }
 
   const formData = await request.formData();
-  const formType = formData.get("formType");
+  const formDataObject = Object.fromEntries(formData);
   const { name, schedule, scheduleType, jobType, runtime, file } =
-    Object.fromEntries(formData) as CronJobFormData;
+    formDataObject as CronJobFormData;
+  const formType = formData.get("formType");
 
   if (formType && formType === formTypes.functionUpload) {
     if (!runtime || !FUNCTION_RUNTIME_OPTIONS.includes(runtime)) {
@@ -107,7 +108,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       return { errors: { name: "Name must be between 2 to 100 characters" } };
     }
 
-    await updateJob({ jobId, userId, formData });
+    await updateJob({ jobId, userId, data: formDataObject });
   }
 
   return redirect("/");

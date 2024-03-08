@@ -84,13 +84,12 @@ export async function deleteJob({
 export async function updateJob({
   jobId,
   userId,
-  formData,
+  data,
 }: {
   jobId: string;
   userId: string;
-  formData: FormData;
+  data: Record<string, any>;
 }) {
-  const data = Object.fromEntries(formData);
   let updatedJob: Awaited<ReturnType<typeof updateDbJob>>;
 
   switch (true) {

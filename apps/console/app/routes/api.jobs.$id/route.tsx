@@ -43,8 +43,13 @@ export async function action({ request, params }: ActionFunctionArgs) {
       await deleteJob({ job, userId });
       return json("OK");
     case "PUT": {
-      const formData = await request.formData();
-      const job = await updateJob({ jobId, userId, formData });
+      const useJsonBody =
+        request.headers.get("Content-Type") === "application/json";
+      const requestData = useJsonBody
+        ? await request.json()
+        : Object.fromEntries(await request.formData());
+
+      const job = await updateJob({ jobId, userId, data: requestData });
 
       if (job) {
         const url = job.endpoint.url;
