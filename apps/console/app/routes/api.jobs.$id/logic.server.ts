@@ -117,7 +117,7 @@ export async function updateJob({
       }
       break;
 
-    case is(BaseJobInputSchema, data):
+    case is(BaseJobInputSchema, data) && data.jobType === "function":
       updatedJob = await updateDbJob({
         jobId,
         userId,
