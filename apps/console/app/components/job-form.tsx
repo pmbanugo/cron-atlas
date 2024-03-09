@@ -1,4 +1,9 @@
-import { Form, useNavigate, useNavigation } from "@remix-run/react";
+import {
+  Form,
+  useNavigate,
+  useNavigation,
+  useActionData,
+} from "@remix-run/react";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
@@ -10,9 +15,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { ScheduleType } from "~/data/types";
 import { FormInfo } from "./form";
+import { findErrorMessage } from "../lib/utils";
+import { ActionDataResponse } from "../data/types";
 
 const scheduleTypes = {
   interval: "Interval",
@@ -34,13 +41,27 @@ export function CronJobForm({
 }: {
   job?: Pick<Job, "name" | "schedule" | "endpoint">;
 }) {
+  const actionData: any = useActionData();
   const transition = useNavigation();
   const navigate = useNavigate();
+  const [errors, setErrors] = useState([]);
+  console.log(errors);
   const [schedulePlaceholder, setSchedulePlaceholder] = useState(
     job?.schedule.type
       ? getSchedulePlaceholder(job.schedule.type)
       : "e.g. 2.5 hrs"
   );
+
+  useEffect(() => {
+    if (actionData) {
+      setErrors(
+        actionData.filter(
+          (v: any, i: any, a: any) =>
+            a.findIndex((t: any) => t.id === v.id) === i
+        )
+      );
+    }
+  }, [actionData]);
 
   return (
     <Form method="post" className="space-y-8">
@@ -55,11 +76,19 @@ export function CronJobForm({
               placeholder="e.g call lambda function"
               name="name"
               type="text"
+              className={`${
+                findErrorMessage(errors, "name") ? "border border-red-400" : ""
+              }`}
               defaultValue={job?.name}
               maxLength={100}
               required
             />
             <FormInfo>*maximum of hundred characters</FormInfo>
+            {findErrorMessage(errors, "name") && (
+              <FormInfo className="text-red-400 text-sm">
+                *{findErrorMessage(errors, "name")}
+              </FormInfo>
+            )}
           </div>
           <div>
             <Label>URL</Label>
@@ -67,10 +96,18 @@ export function CronJobForm({
               placeholder="https://example.com"
               name="url"
               type="url"
+              className={`${
+                findErrorMessage(errors, "url") ? "border border-red-400" : ""
+              }`}
               defaultValue={job?.endpoint.url}
               readOnly={!!job}
               required
             />
+            {findErrorMessage(errors, "url") && (
+              <FormInfo className="text-red-400 text-sm">
+                *{findErrorMessage(errors, "url")}
+              </FormInfo>
+            )}
           </div>
           <div className="flex gap-2">
             <div>
@@ -100,6 +137,11 @@ export function CronJobForm({
                   ))}
                 </SelectContent>
               </Select>
+              {findErrorMessage(errors, "scheduleType") && (
+                <FormInfo className="text-red-400 text-sm">
+                  *{findErrorMessage(errors, "scheduleType")}
+                </FormInfo>
+              )}
             </div>
             <div className="flex-auto">
               <Label>Schedule</Label>
