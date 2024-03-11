@@ -1,5 +1,6 @@
 import { and, eq, sql } from "drizzle-orm";
 import { getDbClient } from "./db";
+import type { Job } from "./schema";
 import { apiTokens, jobs } from "./schema";
 import type { ScheduleType } from "./types";
 
@@ -79,4 +80,23 @@ export async function updateJob({
       functionConfig: jobs.functionConfig,
       endpoint: jobs.endpoint,
     });
+}
+
+export async function updateScheduledFunctionConfig({
+  jobId,
+  userId,
+  functionConfig,
+}: {
+  userId: string;
+  jobId: string;
+  functionConfig: NonNullable<Job["functionConfig"]>;
+}) {
+  const db = getDbClient();
+  return await db
+    .update(jobs)
+    .set({
+      functionConfig: functionConfig,
+      updatedAt: sql`(strftime('%s', 'now'))`,
+    })
+    .where(and(eq(jobs.id, jobId), eq(jobs.userId, userId)));
 }

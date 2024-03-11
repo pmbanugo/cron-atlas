@@ -46,3 +46,16 @@ export const ScheduledFunctionInputSchema = merge([
     ]),
   }),
 ]);
+
+export const FunctionFileUploadInputSchema = object({
+  runtime: picklist(FUNCTION_RUNTIME_OPTIONS, "Invalid runtime value"),
+  file: instance(File, "Please select a function handler file.", [
+    mimeType(
+      ["text/javascript"],
+      "Please ensure that the uploaded file is a JavaScript file."
+    ),
+    maxSize(1024 * 1024 * 2, "Please select a file smaller than 2 MB."),
+    //using 50 bytes as the minimum size for the file. A guess, but it's a guess that's likely to be correct
+    minSize(50, "Please select a file that's not empty"),
+  ]),
+});
