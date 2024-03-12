@@ -12,6 +12,7 @@ import {
   maxSize,
   minSize,
   instance,
+  array,
 } from "valibot";
 import { JOB_TYPES, SCHEDULE_TYPES } from "~/data/types";
 
@@ -59,3 +60,12 @@ export const FunctionFileUploadInputSchema = object({
     minSize(50, "Please select a file that's not empty"),
   ]),
 });
+
+export const SecretsInputSchema = array(
+  object({ key: string(), value: string() }),
+  "Invalid secrets format",
+  [
+    minLength(1, "You need at least one secret"),
+    maxLength(10, "You can only add up to 10 secrets"),
+  ]
+);

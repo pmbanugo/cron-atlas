@@ -3,7 +3,7 @@ import { getEnv, getFlyAppName } from "~/lib/utils";
 import { updateScheduledFunctionArgs } from "~/cron.server/update-schedule";
 import type { Output } from "valibot";
 import { updateScheduledFunctionConfig as updateDbScheduledFunctionConfig } from "~/data/respository.server";
-import type { FunctionFileUploadInputSchema } from "../schema";
+import type { FunctionFileUploadInputSchema } from "../dto-schema";
 
 export async function updateScheduledFunction({
   jobId,

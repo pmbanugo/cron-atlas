@@ -11,7 +11,7 @@ import {
   updateFunctionSchedule,
 } from "~/cron.server/update-schedule";
 import { is } from "valibot";
-import { BaseJobInputSchema, UrlJobInputSchema } from "../schema";
+import { BaseJobInputSchema, UrlJobInputSchema } from "../dto-schema";
 import { updateJob as updateDbJob } from "~/data/respository.server";
 
 // Refactoring: Most (if not all) of these functions are also used in the route handler for the webforms. Perhaps a more generic folder could hold this file. For now, I'll leave it here.

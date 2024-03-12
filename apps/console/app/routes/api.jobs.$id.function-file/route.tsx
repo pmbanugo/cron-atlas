@@ -5,7 +5,7 @@ import { getDbClient } from "~/data/db";
 import { jobs } from "~/data/schema";
 import { requireUserId } from "~/lib/api.server";
 import { updateScheduledFunction } from "./logic.server";
-import { FunctionFileUploadInputSchema } from "../schema";
+import { FunctionFileUploadInputSchema } from "../dto-schema";
 
 export async function action({ request, params }: ActionFunctionArgs) {
   const jobId = params.id;

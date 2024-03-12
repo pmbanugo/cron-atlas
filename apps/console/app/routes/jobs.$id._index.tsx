@@ -15,7 +15,7 @@ import { getSessionManager } from "~/lib/session.server";
 import { updateJob } from "./api.jobs.$id/logic.server";
 import { safeParse } from "valibot";
 import { updateScheduledFunction } from "./api.jobs.$id.function-file/logic.server";
-import { FunctionFileUploadInputSchema } from "./schema";
+import { FunctionFileUploadInputSchema } from "./dto-schema";
 
 export const meta: MetaFunction = () => {
   return [
