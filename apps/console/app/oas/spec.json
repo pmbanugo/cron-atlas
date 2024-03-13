@@ -598,6 +598,15 @@
               "file": {
                 "type": "string",
                 "format": "binary"
+              },
+              "secrets": {
+                "type": "array",
+                "description": "secrets which will be provided to the function at runtime.",
+                "items": {
+                  "$ref": "#/components/schemas/Secret"
+                },
+                "minItems": 1,
+                "uniqueItems": true
               }
             },
             "required": ["runtime", "file"]
