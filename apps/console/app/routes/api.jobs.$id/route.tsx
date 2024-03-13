@@ -8,6 +8,7 @@ import { getJob } from "~/data/respository.server";
 import { jobs, type Job } from "~/data/schema";
 import { requireUserId } from "~/lib/api.server";
 import { deleteJob, updateJob } from "./logic.server";
+import { formatJobForAPI } from "../dto-schema/transform";
 
 type BaseJobDTO = Pick<Job, "id" | "name" | "schedule" | "jobType"> & {
   paused: boolean;
@@ -52,16 +53,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
       const job = await updateJob({ jobId, userId, data: requestData });
 
       if (job) {
-        const url = job.endpoint.url;
-        return json({
-          id: job.id,
-          name: job.name,
-          jobType: job.jobType,
-          schedule: job.schedule,
-          runtime: job?.functionConfig?.runtime,
-          secrets: job?.functionConfig?.secrets,
-          endpoint: url ? { url: url } : undefined,
-        });
+        return json(formatJobForAPI(job));
       }
 
       return new Response("Couldn't update job", { status: 500 });

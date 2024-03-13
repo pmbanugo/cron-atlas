@@ -106,7 +106,7 @@ export async function createScheduledFunction({
 }: {
   data: Required<
     Omit<CronJobFormData, "url" | "secretKeys" | "secretValues">
-  > & { secrets: Secret[] };
+  > & { secrets?: Secret[] };
   userId: string;
 }) {
   const flyOrgSlug =
@@ -154,7 +154,7 @@ export async function createScheduledFunction({
     jobId,
   });
 
-  if (data.secrets.length > 0) {
+  if (data.secrets && data.secrets.length > 0) {
     await flyClient.Secret.setSecrets({
       appId: flyAppName,
       secrets: data.secrets,
@@ -173,7 +173,7 @@ export async function createScheduledFunction({
       functionConfig: {
         runtime: data.runtime,
         secrets:
-          data.secrets.length > 0
+          data.secrets && data.secrets.length > 0
             ? data.secrets.map((secret) => secret.key)
             : undefined,
       },
@@ -182,6 +182,14 @@ export async function createScheduledFunction({
         value: data.schedule,
       },
       userId,
+    })
+    .returning({
+      id: jobs.id,
+      name: jobs.name,
+      jobType: jobs.jobType,
+      schedule: jobs.schedule,
+      functionConfig: jobs.functionConfig,
+      endpoint: jobs.endpoint,
     })
     .execute();
 
@@ -211,6 +219,8 @@ export async function createScheduledFunction({
       jobId,
       scheduleResult,
     });
+  } else {
+    return insertResult.value[0];
   }
   // ignore the failure of the `schedulePromise` for now, because it can be manually fixed by admin or user later.
 }
